@@ -16,5 +16,6 @@ public class ArrayDemo1 {
         double[] arr5 = new double[]{1.93,1.75,1.73,1.81};
         double[] arr6 = {1.93,1.75,1.73,1.81};
 
+        System.out.println(arr6); //[D@f6f4d33 ,地址值
     }
 }
