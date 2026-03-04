@@ -13,6 +13,6 @@ public class ArrayDemo4 {
         //小数0.0
         //布尔值false
         //字符'\u0000'
-        //引用类型null
+        //引用类型null4
     }
 }
