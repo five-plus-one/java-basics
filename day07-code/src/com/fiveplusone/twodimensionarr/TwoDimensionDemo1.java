@@ -17,6 +17,7 @@ public class TwoDimensionDemo1 {
         //arr3[0] 表示二维数组中的第一个一维数组
 //        System.out.println(arr3[0][0]);
 
+
         //二维数组的遍历
         for (int i = 0; i < arr3.length; i++) {
             for (int i1 = 0; i1 < arr3[i].length; i1++) {
