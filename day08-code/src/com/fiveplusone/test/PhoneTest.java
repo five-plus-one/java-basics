@@ -11,5 +11,15 @@ public class PhoneTest {
 
         p.call();
         p.playGame();
+
+        Phone p2 = new Phone();
+        p2.brand = "苹果";
+        p2.price = 8999;
+
+        System.out.println(p2.brand);
+        System.out.println(p2.price);
+
+        p2.call();
+        p2.playGame();
     }
 }
