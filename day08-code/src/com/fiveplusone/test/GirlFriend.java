@@ -4,9 +4,9 @@ public class GirlFriend {
     private int age;
     private String name;
     //set(赋值)
-    public void setAge(int a){
-        if(a >=18 && a <=50){
-            age = a;
+    public void setAge(int age){
+        if(age >=18 && age <=50){
+            this.age = age;
         }else{
             System.out.println("非法数据");
         }
@@ -16,8 +16,8 @@ public class GirlFriend {
         return age;
     }
 
-    public void SetName(String n){
-        name = n;
+    public void SetName(String name){
+        this.name = name;
     }
 
     public String getName(){
