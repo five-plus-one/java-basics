@@ -10,5 +10,8 @@ public class StringJoinerDemo1 {
 
         String str = new StringJoiner(",","[","]").add("aaa").add("bbb").add("ccc").toString();
         System.out.println(str);
+
+        int len = sj.length();
+        System.out.println(len);
     }
 }
