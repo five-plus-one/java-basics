@@ -1,27 +1,59 @@
 package com.fiveplusone.ui;
 
 import javax.swing.*;
+import java.util.Random;
 
 public class GameJFrame extends JFrame {
-    public GameJFrame() {
-        initJFrame();
-        initJMenuBar();
-        initImage();
 
+    int[][] data = new int[4][4];
+
+
+    public GameJFrame() {
+        // 初始化界面
+        initJFrame();
+
+        // 初始化菜单
+        initJMenuBar();
+
+        //初始化数据（打乱）
+        initData();
+
+        //初始化图片
+        initImage();
 
 
         //展示界面
         this.setVisible(true);
     }
 
+    private void initData() {
+        int[] tempArr = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
+
+        Random r = new Random();
+        for (int i = 0; i < tempArr.length; i++) {
+            int index = r.nextInt(tempArr.length);
+            int temp = tempArr[i];
+            tempArr[i] = tempArr[index];
+            tempArr[index] = temp;
+        }
+
+        for (int i = 0; i < tempArr.length; i++) {
+            data[i/4][i%4] = tempArr[i];
+        }
+    }
+
     private void initImage() {
         //初始化图片
-        ImageIcon icon = new ImageIcon("D:\\5plus1\\Study\\College\\java\\java_basics\\basic-code\\day15-code\\image\\animal\\animal3\\1.jpg");
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                int num = data[i][j];
+                JLabel jLabel = new JLabel(new ImageIcon("D:\\5plus1\\Study\\College\\java\\java_basics\\basic-code\\day15-code\\image\\animal\\animal3\\" + num + ".jpg"));
+                jLabel.setBounds(105 * j, 105 * i, 105, 105);
+                this.getContentPane().add(jLabel);
+            }
+        }
 
-        JLabel jLabel = new JLabel(icon);
-        jLabel.setBounds(0,0,105,105);
 
-        this.getContentPane().add(jLabel);
     }
 
     private void initJMenuBar() {
