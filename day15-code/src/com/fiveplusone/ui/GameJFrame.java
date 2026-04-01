@@ -17,6 +17,7 @@ public class GameJFrame extends JFrame implements KeyListener {
             {9, 10, 11, 12},
             {13, 14, 15, 0}
     };
+    int step = 0;
 
 
     public GameJFrame() {
@@ -65,6 +66,10 @@ public class GameJFrame extends JFrame implements KeyListener {
             winJLabel.setBounds(203, 283, 197, 73);
             this.getContentPane().add(winJLabel);
         }
+
+        JLabel stepCount = new JLabel("步数：" + step);
+        stepCount.setBounds(50, 30, 100, 20);
+        this.getContentPane().add(stepCount);
 
         //初始化图片
         //先加载的图片在上方，后加载的在下方
@@ -153,7 +158,7 @@ public class GameJFrame extends JFrame implements KeyListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
-        if(victory()){
+        if (victory()) {
             return;
         }
         int code = e.getKeyCode();
@@ -178,12 +183,14 @@ public class GameJFrame extends JFrame implements KeyListener {
                     {9, 10, 11, 12},
                     {13, 14, 15, 0},
             };
-            x = 3;y = 3;
+            x = 3;
+            y = 3;
             initImage();
         }
     }
 
     private void picMoveFrom(int x, int y) {
+        step++;
         int oldX = x + this.x;
         int oldY = y + this.y;
         if (oldX >= 0 && oldX < 4 && oldY >= 0 && oldY < 4) {
