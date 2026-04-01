@@ -48,9 +48,9 @@ public class GameJFrame extends JFrame implements KeyListener, ActionListener {
     }
 
     private void initGame() {
+        step = 0;
         initData();
         initImage();
-        step = 0;
     }
 
     private void initData() {
@@ -236,10 +236,22 @@ public class GameJFrame extends JFrame implements KeyListener, ActionListener {
             initGame();
         }else if(obj == reLoginItem){
             System.out.println("重新登录");
+            this.setVisible(false);
+            new LoginJFrame();
         }else if(obj == closeItem){
             System.out.println("关闭游戏");
+            System.exit(0);
         }else if(obj == accountItem){
             System.out.println("公众号");
+            JDialog jDialog = new JDialog();
+            JLabel jLabel = new JLabel(new ImageIcon("day15-code/image/about.jpeg"));
+            jLabel.setBounds(0,0,430,430);
+            jDialog.getContentPane().add(jLabel);
+            jDialog.setSize(460,460);
+            jDialog.setAlwaysOnTop(true);
+            jDialog.setLocationRelativeTo(null);
+            jDialog.setModal(true);
+            jDialog.setVisible(true);
         }
     }
 }
