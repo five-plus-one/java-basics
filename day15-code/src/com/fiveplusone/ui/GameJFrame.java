@@ -11,6 +11,13 @@ public class GameJFrame extends JFrame implements KeyListener {
     int[][] data = new int[4][4];
     int x = 0, y = 0;
     String path = "day15-code/image/animal/animal3/";
+    int[][] win = {
+            {1, 2, 3, 4},
+            {5, 6, 7, 8},
+            {9, 10, 11, 12},
+            {13, 14, 15, 0}
+    };
+
 
     public GameJFrame() {
         // 初始化界面
@@ -52,6 +59,13 @@ public class GameJFrame extends JFrame implements KeyListener {
 
     private void initImage() {
         this.getContentPane().removeAll();
+
+        if (victory()) {
+            JLabel winJLabel = new JLabel(new ImageIcon("day15-code/image/win.png"));
+            winJLabel.setBounds(203, 283, 197, 73);
+            this.getContentPane().add(winJLabel);
+        }
+
         //初始化图片
         //先加载的图片在上方，后加载的在下方
         for (int i = 0; i < 4; i++) {
@@ -139,6 +153,9 @@ public class GameJFrame extends JFrame implements KeyListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
+        if(victory()){
+            return;
+        }
         int code = e.getKeyCode();
         if (code == 37) {
             picMoveFrom(0, 1);
@@ -154,6 +171,15 @@ public class GameJFrame extends JFrame implements KeyListener {
             System.out.println("向下移动");
         } else if (code == 65) {
             initImage();
+        } else if (code == 87) {
+            data = new int[][]{
+                    {1, 2, 3, 4},
+                    {5, 6, 7, 8},
+                    {9, 10, 11, 12},
+                    {13, 14, 15, 0},
+            };
+            x = 3;y = 3;
+            initImage();
         }
     }
 
@@ -167,5 +193,16 @@ public class GameJFrame extends JFrame implements KeyListener {
             this.y = oldY;
             initImage();
         }
+    }
+
+    public boolean victory() {
+        for (int i = 0; i < data.length; i++) {
+            for (int j = 0; j < data[i].length; j++) {
+                if (data[i][j] != win[i][j]) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }
