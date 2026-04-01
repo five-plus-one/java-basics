@@ -10,6 +10,7 @@ public class GameJFrame extends JFrame implements KeyListener {
 
     int[][] data = new int[4][4];
     int x = 0, y = 0;
+    String path = "day15-code/image/animal/animal3/";
 
     public GameJFrame() {
         // 初始化界面
@@ -56,17 +57,21 @@ public class GameJFrame extends JFrame implements KeyListener {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 int num = data[i][j];
-                JLabel jLabel = new JLabel(new ImageIcon("day15-code/image/animal/animal3/" + num + ".jpg"));
+                JLabel jLabel = new JLabel(new ImageIcon(path + num + ".jpg"));
                 jLabel.setBounds(105 * j + 83, 105 * i + 134, 105, 105);
                 jLabel.setBorder(new BevelBorder(BevelBorder.LOWERED));
                 this.getContentPane().add(jLabel);
             }
         }
+        addBackgroundImg();
+        this.getContentPane().repaint();
+
+    }
+
+    private void addBackgroundImg() {
         JLabel background = new JLabel(new ImageIcon("day15-code/image/background.png"));
         background.setBounds(40, 40, 508, 560);
         this.getContentPane().add(background);
-        this.getContentPane().repaint();
-
     }
 
     private void initJMenuBar() {
@@ -118,33 +123,44 @@ public class GameJFrame extends JFrame implements KeyListener {
 
     }
 
+    //按下不松
     @Override
     public void keyPressed(KeyEvent e) {
-
+        int code = e.getKeyCode();
+        if (code == 65) {
+            this.getContentPane().removeAll();
+            JLabel all = new JLabel(new ImageIcon(path + "/all.jpg"));
+            all.setBounds(83, 134, 420, 420);
+            this.getContentPane().add(all);
+            addBackgroundImg();
+            this.getContentPane().repaint();
+        }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
         int code = e.getKeyCode();
         if (code == 37) {
-            picMoveFrom(0,1);
+            picMoveFrom(0, 1);
             System.out.println("向左移动");
         } else if (code == 38) {
-            picMoveFrom(1,0);
+            picMoveFrom(1, 0);
             System.out.println("向上移动");
         } else if (code == 39) {
-            picMoveFrom(0,-1);
+            picMoveFrom(0, -1);
             System.out.println("向右移动");
         } else if (code == 40) {
-            picMoveFrom(-1,0);
+            picMoveFrom(-1, 0);
             System.out.println("向下移动");
+        } else if (code == 65) {
+            initImage();
         }
     }
 
     private void picMoveFrom(int x, int y) {
         int oldX = x + this.x;
         int oldY = y + this.y;
-        if(oldX >= 0 && oldX < 4 && oldY >= 0 && oldY < 4) {
+        if (oldX >= 0 && oldX < 4 && oldY >= 0 && oldY < 4) {
             data[this.x][this.y] = data[oldX][oldY];
             data[oldX][oldY] = 0;
             this.x = oldX;
