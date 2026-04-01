@@ -2,11 +2,13 @@ package com.fiveplusone.ui;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Random;
 
-public class GameJFrame extends JFrame implements KeyListener {
+public class GameJFrame extends JFrame implements KeyListener, ActionListener {
 
     int[][] data = new int[4][4];
     int x = 0, y = 0;
@@ -20,6 +22,14 @@ public class GameJFrame extends JFrame implements KeyListener {
     int step = 0;
 
 
+
+    //创建选项下面的条目
+    JMenuItem replayItem = new JMenuItem("重新游戏");
+    JMenuItem reLoginItem = new JMenuItem("重新登录");
+    JMenuItem closeItem = new JMenuItem("关闭游戏");
+
+    JMenuItem accountItem = new JMenuItem("公众号");
+
     public GameJFrame() {
         // 初始化界面
         initJFrame();
@@ -28,14 +38,19 @@ public class GameJFrame extends JFrame implements KeyListener {
         initJMenuBar();
 
         //初始化数据（打乱）
-        initData();
 
-        //初始化图片
-        initImage();
+        initGame();
+
 
 
         //展示界面
         this.setVisible(true);
+    }
+
+    private void initGame() {
+        initData();
+        initImage();
+        step = 0;
     }
 
     private void initData() {
@@ -101,12 +116,12 @@ public class GameJFrame extends JFrame implements KeyListener {
         JMenu functionJMenu = new JMenu("功能");
         JMenu aboutJMenu = new JMenu("关于我们");
 
-        //创建选项下面的条目
-        JMenuItem replayItem = new JMenuItem("重新游戏");
-        JMenuItem reLoginItem = new JMenuItem("重新登录");
-        JMenuItem closeItem = new JMenuItem("关闭游戏");
 
-        JMenuItem accountItem = new JMenuItem("公众号");
+
+        replayItem.addActionListener(this);
+        reLoginItem.addActionListener(this);
+        closeItem.addActionListener(this);
+        accountItem.addActionListener(this);
 
         //将每一个选项下面的条目添加到选项中
         functionJMenu.add(replayItem);
@@ -211,5 +226,20 @@ public class GameJFrame extends JFrame implements KeyListener {
             }
         }
         return true;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Object obj = e.getSource();
+        if(obj == replayItem){
+            System.out.println("重新游戏");
+            initGame();
+        }else if(obj == reLoginItem){
+            System.out.println("重新登录");
+        }else if(obj == closeItem){
+            System.out.println("关闭游戏");
+        }else if(obj == accountItem){
+            System.out.println("公众号");
+        }
     }
 }
