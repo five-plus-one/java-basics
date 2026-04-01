@@ -1,6 +1,7 @@
 package com.fiveplusone.ui;
 
 import javax.swing.*;
+import javax.swing.border.BevelBorder;
 import java.util.Random;
 
 public class GameJFrame extends JFrame {
@@ -38,20 +39,25 @@ public class GameJFrame extends JFrame {
         }
 
         for (int i = 0; i < tempArr.length; i++) {
-            data[i/4][i%4] = tempArr[i];
+            data[i / 4][i % 4] = tempArr[i];
         }
     }
 
     private void initImage() {
         //初始化图片
+        //先加载的图片在上方，后加载的在下方
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 int num = data[i][j];
-                JLabel jLabel = new JLabel(new ImageIcon("D:\\5plus1\\Study\\College\\java\\java_basics\\basic-code\\day15-code\\image\\animal\\animal3\\" + num + ".jpg"));
-                jLabel.setBounds(105 * j, 105 * i, 105, 105);
+                JLabel jLabel = new JLabel(new ImageIcon("day15-code/image/animal/animal3/" + num + ".jpg"));
+                jLabel.setBounds(105 * j + 83, 105 * i + 134, 105, 105);
+                jLabel.setBorder(new BevelBorder(BevelBorder.LOWERED));
                 this.getContentPane().add(jLabel);
             }
         }
+        JLabel background = new JLabel(new ImageIcon("day15-code/image/background.png"));
+        background.setBounds(40, 40, 508, 560);
+        this.getContentPane().add(background);
 
 
     }
