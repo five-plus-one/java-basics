@@ -2,12 +2,14 @@ package com.fiveplusone.ui;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.Random;
 
-public class GameJFrame extends JFrame {
+public class GameJFrame extends JFrame implements KeyListener {
 
     int[][] data = new int[4][4];
-
+    int x = 0, y = 0;
 
     public GameJFrame() {
         // 初始化界面
@@ -39,11 +41,16 @@ public class GameJFrame extends JFrame {
         }
 
         for (int i = 0; i < tempArr.length; i++) {
+            if (tempArr[i] == 0) {
+                x = i / 4;
+                y = i % 4;
+            }
             data[i / 4][i % 4] = tempArr[i];
         }
     }
 
     private void initImage() {
+        this.getContentPane().removeAll();
         //初始化图片
         //先加载的图片在上方，后加载的在下方
         for (int i = 0; i < 4; i++) {
@@ -58,7 +65,7 @@ public class GameJFrame extends JFrame {
         JLabel background = new JLabel(new ImageIcon("day15-code/image/background.png"));
         background.setBounds(40, 40, 508, 560);
         this.getContentPane().add(background);
-
+        this.getContentPane().repaint();
 
     }
 
@@ -102,5 +109,47 @@ public class GameJFrame extends JFrame {
 
         //取消默认的居中放置
         this.setLayout(null);
+
+        this.addKeyListener(this);
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        int code = e.getKeyCode();
+        if (code == 37) {
+            picMoveFrom(0,1);
+            System.out.println("向左移动");
+        } else if (code == 38) {
+            picMoveFrom(1,0);
+            System.out.println("向上移动");
+        } else if (code == 39) {
+            picMoveFrom(0,-1);
+            System.out.println("向右移动");
+        } else if (code == 40) {
+            picMoveFrom(-1,0);
+            System.out.println("向下移动");
+        }
+    }
+
+    private void picMoveFrom(int x, int y) {
+        int oldX = x + this.x;
+        int oldY = y + this.y;
+        if(oldX >= 0 && oldX < 4 && oldY >= 0 && oldY < 4) {
+            data[this.x][this.y] = data[oldX][oldY];
+            data[oldX][oldY] = 0;
+            this.x = oldX;
+            this.y = oldY;
+            initImage();
+        }
     }
 }
