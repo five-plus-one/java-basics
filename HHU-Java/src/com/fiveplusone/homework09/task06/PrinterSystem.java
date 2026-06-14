@@ -38,7 +38,6 @@ public class PrinterSystem {
 class Printer{
     private int status = 1; // 1-打印机1，2-打印机2，3-打印机3
     private final int MAXSTATUS = 3;
-    private int currentstatus;
 
     public synchronized void printletter(char ch,int currentstatus){
         while (status!=currentstatus){

@@ -2,6 +2,7 @@ package com.fiveplusone.homework08.task01;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.function.Consumer;
 
 public class ClubSignupManager {
     public static void main(String[] args) {
@@ -69,6 +70,13 @@ public class ClubSignupManager {
 
         System.out.println("【最终报名名单 - Lambda表达式遍历】");
         signupList.forEach(student -> System.out.println(student));
+
+        signupList.forEach(new Consumer<Student>() {
+            @Override
+            public void accept(Student student) {
+                System.out.println(student);
+            }
+        });
         // 或者使用方法引用：signupList.forEach(System.out::println);
     }
 }
