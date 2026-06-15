@@ -26,7 +26,14 @@ public class ConsoleUI extends ConsoleTools{
             case 1:
                 printProductManagePage();
                 break;
+            case 5:
+                printProductAddPage();
+                break;
         }
+    }
+
+    private static void printProductAddPage() {
+        printEditProductInfo();
     }
 
     private static void printProductManagePage() {
@@ -78,6 +85,8 @@ public class ConsoleUI extends ConsoleTools{
             });
             printDivider();
         }
-
+    }
+    public static void printEditProductInfo(){
+        printEditProductInfo(Global.getCurrentEditProduct());
     }
 }

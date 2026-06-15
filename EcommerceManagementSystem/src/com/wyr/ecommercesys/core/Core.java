@@ -41,8 +41,8 @@ public class Core {
 
     private static void ProductAdd() {
         Pages.switchPage(5);
-        EditProduct editProduct = new EditProduct();
-        String productId = InputTools.getStrWithGuide("商品编号");
+        Global.setCurrentEditProduct(new EditProduct());
+
 
     }
 }

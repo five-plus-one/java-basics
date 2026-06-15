@@ -9,17 +9,22 @@ public class Global {
     public final static String SysVersion = "V1.0";
     public final static String author = "王煜冉";
 
-    private EditProduct currentEditProduct = null;
+    private static EditProduct currentEditProduct = null;
 
     public static String getTitle(){
         return SysName + " " + SysVersion + " by" + author;
     }
 
-    public void setCurrentEditProduct(EditProduct currentEditProduct) {
-        this.currentEditProduct = currentEditProduct;
+    public static void setCurrentEditProduct(EditProduct currentEditProduct) {
+        Global.currentEditProduct = currentEditProduct;
     }
 
-    public 
+    public static EditProduct getCurrentEditProduct() {
+        if(currentEditProduct == null){
+            currentEditProduct = new EditProduct();
+        }
+        return currentEditProduct;
+    }
 
 
 }
