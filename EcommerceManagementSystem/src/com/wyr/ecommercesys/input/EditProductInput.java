@@ -125,6 +125,6 @@ public class EditProductInput {
                 }
             }
         }
-
+        Pages.setCurrentPageStatus(0);
     }
 }

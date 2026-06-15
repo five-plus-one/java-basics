@@ -17,7 +17,7 @@ public class EditProduct extends Product{
     private boolean isSetProductQuantity = false;
     private boolean isSetCategoryList = false;
     public EditProduct() {
-        super("","",new CategoryList(),10,10); //临时数据
+        super("","",new CategoryList(),10,10,true); //临时数据
     }
     public EditProduct(Product product) throws ProductPriceIllegalException, ProducetQuantityIllegalException {
         this();
@@ -86,7 +86,7 @@ public class EditProduct extends Product{
         return isSetProductId && isSetProductName && isSetProductPrice && isSetProductQuantity && isSetCategoryList;
     }
 
-    public Product convertToProduct() throws ProductPriceIllegalException {
+    public Product convertToProduct() throws ProductPriceIllegalException, ProducetQuantityIllegalException {
         if(isComplete()){
             return new Product(getProductId(),getProductName(),getCategoryList(),getPrice(),getQuantity());
         }else{

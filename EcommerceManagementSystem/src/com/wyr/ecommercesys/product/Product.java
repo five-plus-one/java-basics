@@ -13,7 +13,7 @@ public class Product {
     private CategoryList categoryList;
     private double price;
     private int quantity;
-    public Product(String productId, String productName, CategoryList categoryList, double price, int quantity) {
+    public Product(String productId, String productName, CategoryList categoryList, double price, int quantity) throws ProducetQuantityIllegalException, ProductPriceIllegalException {
 //        this.productId = productId;
 //        this.productName = productName;
 //        this.categoryList = categoryList;
@@ -22,9 +22,13 @@ public class Product {
 
 //        Product(productId,productName,categoryList,price,quantity,false);
         //这么写构造方法会报错，应该用this
-        this(productId,productName,categoryList,price,quantity,false);
+        this.productId = productId;
+        this.productName = productName;
+        this.categoryList = categoryList;
+        this.setPrice(price);
+        this.setQuantity(quantity);
     }
-    public Product(String productId, String productName, CategoryList categoryList, double price, int quantity,boolean ignore){
+    public Product(String productId, String productName, CategoryList categoryList, double price, int quantity,boolean ignore) {
         try{
             this.productId = productId;
             this.productName = productName;

@@ -82,12 +82,12 @@ public class ConsoleUI extends ConsoleTools{
 
     public static void printConfirm(String action,String otherwise,String message){
         clearScreen();
-        printTitle(Pages.getPageName(Pages.getCurrentPageId()));
-        System.out.println();
+        printUI(Pages.getCurrentPageId());
+//        System.out.println();
         System.out.println(RESET + BOLD + "  是否确认" + YELLOW + action + RESET + BOLD + "?" + RESET);
-        System.out.println();
+//        System.out.println();
         printDivider();
-        System.out.println();
+//        System.out.println();
         System.out.print(RESET  + message + "输入" + YELLOW + "Y/y" + RESET + "以" + YELLOW + action + RESET + ",输入" + YELLOW + "N/n" + RESET + "以" + YELLOW +  otherwise + RESET + ": ");
     }
 
