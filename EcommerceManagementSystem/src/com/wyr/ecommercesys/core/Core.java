@@ -1,8 +1,13 @@
 package com.wyr.ecommercesys.core;
 
+import com.wyr.ecommercesys.console.ConsoleTools;
+import com.wyr.ecommercesys.console.ConsoleUI;
+import com.wyr.ecommercesys.input.EditProductInput;
 import com.wyr.ecommercesys.input.InputTools;
 import com.wyr.ecommercesys.pages.Pages;
 import com.wyr.ecommercesys.product.EditProduct;
+
+import java.util.Random;
 
 public class Core {
     private Core(){}
@@ -12,7 +17,6 @@ public class Core {
             int choice = InputTools.getIntWithGuide("功能编号",0,3);
             if(choice == 0){
                 ExitPage();
-                break;
             }else if(choice == 1){
                 ProductManage();
             }
@@ -42,7 +46,10 @@ public class Core {
     private static void ProductAdd() {
         Pages.switchPage(5);
         Global.setCurrentEditProduct(new EditProduct());
-
+        EditProductInput.inputProductId();
+        EditProductInput.inputProductName();
+        EditProductInput.inputProductPrice();
+        EditProductInput.inputProductQuantity();
 
     }
 }

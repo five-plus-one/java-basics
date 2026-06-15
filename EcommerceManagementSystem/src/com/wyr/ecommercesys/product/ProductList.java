@@ -5,12 +5,12 @@ import com.wyr.ecommercesys.product.exception.ProductIdExisedException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProducetList {
+public class ProductList {
     private List<Product> productList;
-    ProducetList(List<Product> productList) {
+    ProductList(List<Product> productList) {
         this.productList = productList;
     }
-    ProducetList() {
+    public ProductList() {
         this.productList = new ArrayList<>();
     }
     public List<Product> getProductList() {

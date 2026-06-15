@@ -1,6 +1,7 @@
 package com.wyr.ecommercesys.core;
 
 import com.wyr.ecommercesys.product.EditProduct;
+import com.wyr.ecommercesys.product.ProductList;
 
 // 全局信息
 public class Global {
@@ -10,6 +11,7 @@ public class Global {
     public final static String author = "王煜冉";
 
     private static EditProduct currentEditProduct = null;
+    private static ProductList currentProductList = null;
 
     public static String getTitle(){
         return SysName + " " + SysVersion + " by" + author;
@@ -26,5 +28,16 @@ public class Global {
         return currentEditProduct;
     }
 
+
+    public static void setCurrentProductList(ProductList currentProductList) {
+        Global.currentProductList = currentProductList;
+    }
+
+    public static ProductList getCurrentProductList() {
+        if(currentProductList == null){
+            currentProductList = new ProductList();
+        }
+        return currentProductList;
+    }
 
 }

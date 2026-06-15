@@ -112,4 +112,13 @@ public class ConsoleTools {
     public static void printFunction(String func,String desc){
         printFunction(func,desc,1);
     }
+    public static void yellow(String message){
+        System.out.print(RESET + YELLOW +message + RESET);
+    }
+    public static void green(String message){
+        System.out.print(RESET + GREEN +message + RESET);
+    }
+    public static void red(String message){
+        System.out.print(RESET + RED +message + RESET);
+    }
 }

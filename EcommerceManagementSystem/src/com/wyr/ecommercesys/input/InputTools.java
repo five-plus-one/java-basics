@@ -6,15 +6,17 @@ import java.util.Scanner;
 
 public class InputTools {
     private InputTools(){} //私有化构造方法
-    private static int getIntWithGuide(String InputName, boolean restrictMin, int minnum, boolean restrictMax , int maxnum){
-        Pages.renderCurrentPage();
-        System.out.print("请输入" +InputName);
+    private static int getIntWithGuide(String inputName, boolean restrictMin, int minnum, boolean restrictMax , int maxnum){
+//        Pages.renderCurrentPage();
+        System.out.print("请输入" +inputName);
         if(restrictMin && restrictMax){
             System.out.print("(" + minnum + "-" + maxnum + "): ");
         }else if(restrictMax){
             System.out.print("(≤" + maxnum + "): ");
         }else if(restrictMin){
             System.out.print("(≥" + minnum + "): ");
+        }else{
+            System.out.print(": ");
         }
         boolean flag = true;
         int num = -1;
@@ -25,11 +27,11 @@ public class InputTools {
                     Pages.renderCurrentPage();
                     if(restrictMax && restrictMin){
 //                        ConsoleTools.clearPreviousLine(); IDEA中的控制台并不支持这种格式控制
-                        System.out.print(InputName + "必须为" + minnum + "-" + maxnum + "之间的整数，请重新输入：");
+                        System.out.print(inputName + "必须为" + minnum + "-" + maxnum + "之间的整数，请重新输入：");
                     }else if(restrictMax){
-                        System.out.print(InputName + "不能超过" + maxnum + "，请重新输入：");
+                        System.out.print(inputName + "不能超过" + maxnum + "，请重新输入：");
                     }else{
-                        System.out.print(InputName + "不能低于" + minnum + "，请重新输入：");
+                        System.out.print(inputName + "不能低于" + minnum + "，请重新输入：");
                     }
                 }else{
                     flag = false;
@@ -37,7 +39,25 @@ public class InputTools {
             }catch (NumberFormatException e){
 //                ConsoleTools.clearPreviousLine();
                 Pages.renderCurrentPage();
-                System.out.print(InputName + "必须为整数，请重新输入：");
+                System.out.print(inputName + "必须为整数，请重新输入：");
+            }
+        }
+        return num;
+    }
+    public static double getDoubleWithGuide(String inputName){
+        return getDoubleWithGuide(inputName,"");
+    }
+    public static double getDoubleWithGuide(String inputName,String message){
+//        Pages.renderCurrentPage();
+        System.out.print(message + "请输入" +inputName + ": ");
+        double num = -1;
+        while(true){
+            try{
+                num = Double.parseDouble(getInput().trim());
+                break;
+            }catch (NumberFormatException e){
+                Pages.renderCurrentPage();
+                System.out.println(inputName + "输入格式有误，请重新输入：");
             }
         }
         return num;
@@ -47,6 +67,9 @@ public class InputTools {
     }
     public static int getIntWithGuide(String InputName, int minnum){
         return getIntWithGuide(InputName,true,minnum,false,0);
+    }
+    public static int getIntWithGuide(String InputName){
+        return getIntWithGuide(InputName,false,0,false,0);
     }
     public static String getStr(){
         return getInput().trim();
@@ -65,7 +88,7 @@ public class InputTools {
     }
 
     public static String getStrWithGuide(String InputName,boolean NotEmptyRestrict){
-        Pages.renderCurrentPage();
+//        Pages.renderCurrentPage();
         System.out.print("请输入" + InputName + ": ");
         String str = "";
         while(true){
@@ -79,7 +102,14 @@ public class InputTools {
         return str;
     }
 
+
+
     public static String getStrWithGuide(String InputName){
         return getStrWithGuide(InputName,true);
+    }
+
+    public static void waitForEnter(){
+        getInput();
+        return;
     }
 }

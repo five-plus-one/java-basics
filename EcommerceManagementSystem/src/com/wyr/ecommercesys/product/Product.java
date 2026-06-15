@@ -13,12 +13,29 @@ public class Product {
     private CategoryList categoryList;
     private double price;
     private int quantity;
-    Product(String productId, String productName, CategoryList categoryList, double price, int quantity) {
-        this.productId = productId;
-        this.productName = productName;
-        this.categoryList = categoryList;
-        this.setPrice(price);
-        this.setQuantity(quantity);
+    public Product(String productId, String productName, CategoryList categoryList, double price, int quantity) {
+//        this.productId = productId;
+//        this.productName = productName;
+//        this.categoryList = categoryList;
+//        this.setPrice(price);
+//        this.setQuantity(quantity);
+
+//        Product(productId,productName,categoryList,price,quantity,false);
+        //这么写构造方法会报错，应该用this
+        this(productId,productName,categoryList,price,quantity,false);
+    }
+    public Product(String productId, String productName, CategoryList categoryList, double price, int quantity,boolean ignore){
+        try{
+            this.productId = productId;
+            this.productName = productName;
+            this.categoryList = categoryList;
+            this.setPrice(price);
+            this.setQuantity(quantity);
+        } catch (ProductPriceIllegalException | ProducetQuantityIllegalException e) {
+            if(!ignore){
+                throw new RuntimeException(e);
+            }
+        }
     }
 
 
@@ -51,7 +68,7 @@ public class Product {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(double price) throws ProductPriceIllegalException {
         if(price<0){
             throw new ProductPriceIllegalException("wyr-商品错误：商品价格" + price + "不能为负数");
         }
@@ -62,7 +79,7 @@ public class Product {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(int quantity) throws ProducetQuantityIllegalException {
         if(quantity<0){
             throw new ProducetQuantityIllegalException("wyr-商品错误：商品数量" + quantity + "不能为负数");
         }

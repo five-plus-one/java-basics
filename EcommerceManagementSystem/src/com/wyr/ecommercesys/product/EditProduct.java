@@ -2,8 +2,11 @@ package com.wyr.ecommercesys.product;
 
 import com.wyr.ecommercesys.category.CategoryList;
 import com.wyr.ecommercesys.product.exception.EditProductNotCompletedException;
+import com.wyr.ecommercesys.product.exception.ProducetQuantityIllegalException;
+import com.wyr.ecommercesys.product.exception.ProductPriceIllegalException;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 //商品编辑类，增加了编辑状态的提示，用于商品录入或商品编辑
@@ -16,7 +19,7 @@ public class EditProduct extends Product{
     public EditProduct() {
         super("","",new CategoryList(),10,10); //临时数据
     }
-    public EditProduct(Product product) {
+    public EditProduct(Product product) throws ProductPriceIllegalException, ProducetQuantityIllegalException {
         this();
         setProductId(product.getProductId());
         setProductName(product.getProductName());
@@ -44,19 +47,19 @@ public class EditProduct extends Product{
     }
 
     @Override
-    public void setPrice(double price) {
+    public void setPrice(double price) throws ProductPriceIllegalException {
         super.setPrice(price);
         isSetProductPrice = true;
     }
 
     @Override
-    public void setQuantity(int quantity) {
+    public void setQuantity(int quantity) throws ProducetQuantityIllegalException {
         super.setQuantity(quantity);
         isSetProductQuantity = true;
     }
 
     public Map<String,String> getInfoShowMap(){
-        Map<String,String> map = new HashMap<>();
+        Map<String,String> map = new LinkedHashMap<>();
         if(isSetProductId){
             map.put("商品编号",getProductId());
         }
@@ -74,12 +77,14 @@ public class EditProduct extends Product{
         }
         return map;
     }
-
+    public boolean isEmpty(){
+        return (!isSetProductId&&!isSetProductName&&!isSetProductPrice&&!isSetProductQuantity&& !isSetCategoryList);
+    }
     public boolean isComplete(){
         return isSetProductId && isSetProductName && isSetProductPrice && isSetProductQuantity && isSetCategoryList;
     }
 
-    public Product convertToProduct(){
+    public Product convertToProduct() throws ProductPriceIllegalException {
         if(isComplete()){
             return new Product(getProductId(),getProductName(),getCategoryList(),getPrice(),getQuantity());
         }else{

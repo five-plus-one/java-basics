@@ -33,6 +33,8 @@ public class ConsoleUI extends ConsoleTools{
     }
 
     private static void printProductAddPage() {
+        System.out.println("请按照提示输入需要添加的商品信息");
+        printDivider();
         printEditProductInfo();
     }
 
@@ -65,6 +67,7 @@ public class ConsoleUI extends ConsoleTools{
         System.out.println();
         System.out.print(RESET  + message + "输入" + YELLOW + "Y/y" + RESET + "以" + YELLOW + action + RESET + ",输入" + YELLOW + "N/n" + RESET + "以" + YELLOW +  otherwise + RESET + ": ");
     }
+
     public static void printConfirm(String action,String otherwise){
         printConfirm(action,otherwise,"");
     }
@@ -79,7 +82,7 @@ public class ConsoleUI extends ConsoleTools{
         printDivider();
     }
     public static void printEditProductInfo(EditProduct editProduct){
-        if(editProduct!=null){
+        if(editProduct!=null && !editProduct.isEmpty()){
             editProduct.getInfoShowMap().forEach((key,value)->{
                 printFunction(key,value);
             });
