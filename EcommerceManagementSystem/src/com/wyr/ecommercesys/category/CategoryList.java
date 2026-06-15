@@ -1,0 +1,42 @@
+package com.wyr.ecommercesys.category;
+
+import java.util.ArrayList;
+import java.util.List;
+
+// 一个用户管理类别列表的类，这样子的好处是可以将类实现打组
+public class CategoryList {
+    private List<Category> categoryList;
+
+    public CategoryList(){
+        categoryList = new ArrayList<Category>();
+    }
+
+    public CategoryList(List<Category> categoryList){
+        this.categoryList = categoryList;
+    }
+
+    public void setCategoryList(List<Category> categoryList) {
+        this.categoryList = categoryList;
+    }
+
+    public List<Category> getCategoryList() {
+        return categoryList;
+    }
+
+    public void addCategory(Category category){
+        categoryList.add(category);
+    }
+
+
+    //用于快速打印所有所属的类别
+    public String getSimpleDescription(){
+        StringBuffer sb = new StringBuffer();
+        for(int i=0; i<categoryList.size();i++){
+            sb.append(categoryList.get(i).getCategoryName());
+            if(i!=categoryList.size()-1){
+                sb.append(",");
+            }
+        }
+        return sb.toString();
+    }
+}
