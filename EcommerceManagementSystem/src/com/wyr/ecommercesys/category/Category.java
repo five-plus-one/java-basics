@@ -5,13 +5,13 @@ public class Category {
     private static int categoryCounter = 0; //计数器，用于自动生成新的唯一ID
     private String categoryName;
     private String categoryId;  //id属性，这样修改类别名称的时候就不用所有地方做改动了
-    Category(String categoryName){
+    protected Category(String categoryName){
         this.categoryName = categoryName;
         categoryCounter++;
         this.categoryId = "wyr-category-" + categoryCounter; //自动赋予ID,wyr是我的姓名首字母:D
         //实际上，这个categoryId并不会对用户暴露，作为唯一id，方便直接修改标签名称
     }
-    Category(String categoryId, String categoryName){
+    protected Category(String categoryId, String categoryName){
         this.categoryId = categoryId;
         categoryCounter++;
         this.categoryName = categoryName;

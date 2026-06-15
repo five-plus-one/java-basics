@@ -6,12 +6,19 @@ import com.wyr.ecommercesys.input.InputTools;
 
 public class Pages {
     private static int currentPageId;
+    private static int currentPageStatus;
     private static final String[] pageName = new String[]{
             "首页","商品管理","订单管理","保存与读取","退出系统","添加商品"
             // o     1          2          3         4       5
     };
 
     private Pages(){}
+    public static int getCurrentPageStatus() {
+        return currentPageStatus;
+    }
+    public static void setCurrentPageStatus(int currentPageStatus){
+        Pages.currentPageStatus = currentPageStatus;
+    }
     public static int getCurrentPageId() {
         return currentPageId;
     }
@@ -22,6 +29,7 @@ public class Pages {
         ConsoleUI.printUI(currentPageId);
     }
     public static void switchPage(int currentPageId){
+        setCurrentPageStatus(0);
         setCurrentPageId(currentPageId);
         renderCurrentPage();
     }

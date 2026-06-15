@@ -83,6 +83,7 @@ public class Product {
         if(quantity<0){
             throw new ProducetQuantityIllegalException("wyr-商品错误：商品数量" + quantity + "不能为负数");
         }
+        this.quantity = quantity;
     }
 
 }

@@ -5,7 +5,7 @@ import java.util.List;
 
 // 一个用户管理类别列表的类，这样子的好处是可以将类实现打组
 public class CategoryList {
-    private List<Category> categoryList;
+    protected List<Category> categoryList;
 
     public CategoryList(){
         categoryList = new ArrayList<Category>();
@@ -23,10 +23,23 @@ public class CategoryList {
         return categoryList;
     }
 
-    public void addCategory(Category category){
+    public Category addCategory(Category category){
         categoryList.add(category);
+        return category;
     }
 
+    public boolean contains(Category category){
+        return contains(category.getCategoryName());
+    }
+
+    public boolean contains(String name){
+        for(Category category : categoryList){
+            if(category.getCategoryName().equals(name)){
+                return true;
+            }
+        }
+        return false;
+    }
 
     //用于快速打印所有所属的类别
     public String getSimpleDescription(){
@@ -41,5 +54,9 @@ public class CategoryList {
             }
         }
         return sb.toString();
+    }
+
+    public void removeCategory(int index){
+        categoryList.remove(index);
     }
 }

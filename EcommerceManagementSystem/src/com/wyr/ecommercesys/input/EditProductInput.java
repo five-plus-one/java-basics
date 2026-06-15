@@ -1,5 +1,7 @@
 package com.wyr.ecommercesys.input;
 
+import com.wyr.ecommercesys.category.Category;
+import com.wyr.ecommercesys.category.CategoryList;
 import com.wyr.ecommercesys.console.ConsoleUI;
 import com.wyr.ecommercesys.core.Global;
 import com.wyr.ecommercesys.pages.Pages;
@@ -16,6 +18,7 @@ public class EditProductInput {
         return Global.getCurrentEditProduct();
     }
     public static void inputProductId(){
+        Pages.setCurrentPageStatus(0);
         Pages.renderCurrentPage();
         String productOriginalId = InputTools.getStrWithGuide("商品编号");
         String productId = "";
@@ -39,12 +42,14 @@ public class EditProductInput {
         InputTools.waitForEnter();
     }
     public static void inputProductName(){
+        Pages.setCurrentPageStatus(0);
         Pages.renderCurrentPage();
         Global.getCurrentEditProduct().setProductName(
                 InputTools.getStrWithGuide("商品名称")
         );
     }
     public static void inputProductPrice(){
+        Pages.setCurrentPageStatus(0);
         String message = "";
         Pages.renderCurrentPage();
 
@@ -65,6 +70,7 @@ public class EditProductInput {
         }
     }
     public static void inputProductQuantity(){
+        Pages.setCurrentPageStatus(0);
         Pages.renderCurrentPage();
         while(true){
             try {
@@ -79,5 +85,46 @@ public class EditProductInput {
                 ConsoleUI.red(e.getMessage() + "。请重新输入。\n");
             }
         }
+    }
+
+    public static void inputProductCategory(){
+        if(!Global.getCurrentEditProduct().isSetCategoryList()){
+            Global.getCurrentEditProduct().setCategoryList(
+                    new CategoryList()
+            );
+        }
+        CategoryList categoryList = Global.getCurrentEditProduct().getCategoryList();
+        while(true){
+            Pages.setCurrentPageStatus(1);
+            Pages.renderCurrentPage();
+            int choice = InputTools.getIntWithGuide("功能选择",0,2);
+            if(choice == 0){
+                break;
+            }else if(choice == 1){
+                Pages.setCurrentPageStatus(2);
+                Pages.renderCurrentPage();
+                String addCategory = InputTools.getStrWithGuide("添加的分类");
+                Category category = Global.getCategoryPool().getCategoryByName(addCategory);
+                if(categoryList.contains(category)){
+                    ConsoleUI.red("该分类已存在。按下回车以继续\n");
+                    InputTools.waitForEnter();
+                }else{
+                    categoryList.addCategory(category);
+                    Pages.renderCurrentPage();
+                    System.out.println("添加成功，按下回车以继续");
+                    InputTools.waitForEnter();
+                }
+            }else if(choice == 2){
+                Pages.setCurrentPageStatus(3);
+                Pages.renderCurrentPage();
+                int op = InputTools.getIntWithGuide("删除的标签编号",0,categoryList.getCategoryList().size());
+                if(op > 0){
+                    categoryList.removeCategory(op-1);
+                    System.out.println("删除成功，按下回车键以继续");
+                    InputTools.waitForEnter();
+                }
+            }
+        }
+
     }
 }

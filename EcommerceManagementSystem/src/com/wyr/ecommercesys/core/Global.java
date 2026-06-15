@@ -1,5 +1,7 @@
 package com.wyr.ecommercesys.core;
 
+import com.wyr.ecommercesys.category.CategoryList;
+import com.wyr.ecommercesys.category.CategoryPool;
 import com.wyr.ecommercesys.product.EditProduct;
 import com.wyr.ecommercesys.product.ProductList;
 
@@ -12,6 +14,7 @@ public class Global {
 
     private static EditProduct currentEditProduct = null;
     private static ProductList currentProductList = null;
+    private static CategoryPool categoryPool = null;
 
     public static String getTitle(){
         return SysName + " " + SysVersion + " by" + author;
@@ -39,5 +42,10 @@ public class Global {
         }
         return currentProductList;
     }
-
+    public static CategoryPool getCategoryPool() {
+        if(categoryPool == null){
+            categoryPool = new CategoryPool();
+        }
+        return categoryPool;
+    }
 }

@@ -50,6 +50,7 @@ public class Core {
         EditProductInput.inputProductName();
         EditProductInput.inputProductPrice();
         EditProductInput.inputProductQuantity();
+        EditProductInput.inputProductCategory();
 
     }
 }

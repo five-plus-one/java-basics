@@ -36,6 +36,29 @@ public class ConsoleUI extends ConsoleTools{
         System.out.println("请按照提示输入需要添加的商品信息");
         printDivider();
         printEditProductInfo();
+        if(Pages.getCurrentPageStatus() == 1){
+            ConsoleUI.yellow("分类管理\n");
+            ConsoleUI.printFunction("1.添加分类","为添加的商品添加一个分类");
+            ConsoleUI.printFunction("2.删除分类","删除已添加的分类");
+            ConsoleUI.printFunction("0.继续","继续完成下一步操作");
+        }else if(Pages.getCurrentPageStatus() == 2){
+            ConsoleUI.yellow("分类管理 - 添加分类\n");
+        }else if(Pages.getCurrentPageStatus() == 3){
+            ConsoleUI.yellow("分类管理 - 删除分类\n");
+            printDivider();
+            if(Global.getCurrentEditProduct()
+                    .getCategoryList().getCategoryList().isEmpty()){
+                ConsoleUI.red("暂无分类，请先去添加\n");
+            }
+            for (int i = 0; i < Global.getCurrentEditProduct()
+                    .getCategoryList().getCategoryList().size(); i++) {
+                ConsoleUI.printFunction((i+1)+"." ,Global.getCurrentEditProduct()
+                        .getCategoryList().getCategoryList()
+                        .get(i).getCategoryName());
+            }
+            ConsoleUI.printFunction("0.","取消删除");
+            printDivider();
+        }
     }
 
     private static void printProductManagePage() {

@@ -57,7 +57,6 @@ public class EditProduct extends Product{
         super.setQuantity(quantity);
         isSetProductQuantity = true;
     }
-
     public Map<String,String> getInfoShowMap(){
         Map<String,String> map = new LinkedHashMap<>();
         if(isSetProductId){
@@ -76,6 +75,9 @@ public class EditProduct extends Product{
             map.put("库存数量",getQuantity()+"");
         }
         return map;
+    }
+    public boolean isSetCategoryList(){
+        return isSetCategoryList;
     }
     public boolean isEmpty(){
         return (!isSetProductId&&!isSetProductName&&!isSetProductPrice&&!isSetProductQuantity&& !isSetCategoryList);
