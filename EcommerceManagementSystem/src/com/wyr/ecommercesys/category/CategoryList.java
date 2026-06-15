@@ -30,6 +30,9 @@ public class CategoryList {
 
     //用于快速打印所有所属的类别
     public String getSimpleDescription(){
+        if(categoryList.isEmpty()){
+            return "暂无类别";
+        }
         StringBuffer sb = new StringBuffer();
         for(int i=0; i<categoryList.size();i++){
             sb.append(categoryList.get(i).getCategoryName());
