@@ -17,7 +17,13 @@ public class Order {
         this.orderItemList = orderItemList;
         this.finalPrice = orderItemList.getTotalPrice();
     }
-
+    // 新增：专用于从本地文件恢复历史订单的构造方法
+    public Order(String orderId, double finalPrice, OrderItemList orderItemList){
+        this.orderId = orderId;
+        this.createTime = System.currentTimeMillis(); // 也可以存时间戳，这里简化处理
+        this.orderItemList = orderItemList;
+        this.finalPrice = finalPrice;
+    }
     //生成订单号，这里采用学号+时间戳+随机后缀
     private String generateUniqueOrderId() {
         long timestamp = System.currentTimeMillis();

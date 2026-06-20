@@ -3,6 +3,8 @@ package com.wyr.ecommercesys.core;
 import com.wyr.ecommercesys.console.ConsoleUI;
 import com.wyr.ecommercesys.input.EditProductInput;
 import com.wyr.ecommercesys.input.InputTools;
+import com.wyr.ecommercesys.io.DataCorruptedException;
+import com.wyr.ecommercesys.io.FileTools;
 import com.wyr.ecommercesys.order.Order;
 import com.wyr.ecommercesys.order.OrderItem;
 import com.wyr.ecommercesys.order.OrderItemList;
@@ -15,11 +17,27 @@ import com.wyr.ecommercesys.product.exception.ProductQuantityIllegalException;
 import com.wyr.ecommercesys.product.exception.ProductNotFoundException;
 import com.wyr.ecommercesys.product.exception.ProductPriceIllegalException;
 
+import java.io.IOException;
 
 
 public class Core {
     private Core(){}
     public static void main(String[] args) {
+        // 系统启动：捕获底层抛出的全部解析和 I/O 异常
+        // 如果文件损坏，优雅中断加载，保证系统依然可以空盘启动
+        try {
+            FileTools.loadProducts();
+            FileTools.loadOrders();
+        } catch (DataCorruptedException e) {
+            ConsoleUI.red("\n[严重错误] 本地数据文件已损坏，解析中断：" + e.getMessage() + "\n");
+            ConsoleUI.yellow("系统将以空盘模式启动。按下回车键继续...\n");
+            InputTools.waitForEnter();
+        } catch (IOException e) {
+            ConsoleUI.yellow("\n[系统提示] 读取本地文件失败或文件不存在（首次运行）：" + e.getMessage() + "\n");
+            ConsoleUI.yellow("按下回车键继续...\n");
+            InputTools.waitForEnter();
+        }
+
         while(true){
             Pages.switchPage(0);
             int choice = InputTools.getIntWithGuide("功能编号",0,3);
@@ -31,10 +49,40 @@ public class Core {
                 ProductManage();
             }else if(choice == 2){
                 OrderManage();
+            }else if(choice == 3){
+                DataManage();
             }
         }
     }
 
+    // 文件保存模块
+    private static void DataManage() {
+        while (true) {
+            ConsoleUI.clearScreen();
+            ConsoleUI.printTitle("保存与读取");
+            ConsoleUI.printFunction("1. 立即保存数据", "将当前内存中的商品和订单保存到本地 txt 文件");
+            System.out.println();
+            ConsoleUI.printFunction("0. 返回首页", "退出当前菜单");
+            ConsoleUI.printDivider();
+
+            int choice = InputTools.getIntWithGuide("操作编号", 0, 1);
+            if (choice == 0) {
+                break;
+            } else if (choice == 1) {
+                // Controller 拦截所有的底层写入异常，统一交由 View 层打印！
+                try {
+                    FileTools.saveProducts();
+                    FileTools.saveOrders();
+                    ConsoleUI.green("\n  [操作成功] 所有数据已安全写入本地磁盘！\n");
+                } catch (IOException e) {
+                    ConsoleUI.red("\n  [操作失败] 文件写入发生系统异常：" + e.getMessage() + "\n");
+                    ConsoleUI.yellow("  请检查磁盘空间或读写权限。\n");
+                }
+                ConsoleUI.green("按下回车返回上一级\n");
+                InputTools.waitForEnter();
+            }
+        }
+    }
 
 
     private static boolean ExitPage() {

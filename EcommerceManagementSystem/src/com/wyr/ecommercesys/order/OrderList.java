@@ -60,4 +60,9 @@ public class OrderList {
         orderList.add(newOrder);
         return newOrder;
     }
+
+    // 新增：用于将本地读取的历史订单直接塞入大盘
+    public void addOrder(Order order) {
+        orderList.add(order);
+    }
 }
