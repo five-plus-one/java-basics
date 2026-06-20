@@ -24,7 +24,7 @@ public class EditProductInput {
         String productId = "";
         while(true){
             Random r = new Random();
-            productId = "wyr-" + productOriginalId + "-" + r.nextInt(100,101);
+            productId = "wyr-" + productOriginalId + "-" + r.nextInt(Global.RandomNumOrigin,Global.RandomNumBound);
             System.out.println("已自动添加姓名首字母为固定前缀，随机数后缀");
             System.out.print("新的商品编号为 " );
             Global.getCurrentEditProduct().setProductId(productId);

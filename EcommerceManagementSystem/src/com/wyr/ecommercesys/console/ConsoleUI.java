@@ -1,6 +1,9 @@
 package com.wyr.ecommercesys.console;
 
 import com.wyr.ecommercesys.core.Global;
+import com.wyr.ecommercesys.order.Order;
+import com.wyr.ecommercesys.order.OrderItem;
+import com.wyr.ecommercesys.order.ShoppingCart;
 import com.wyr.ecommercesys.pages.Pages;
 import com.wyr.ecommercesys.product.EditProduct;
 import com.wyr.ecommercesys.product.Product;
@@ -40,9 +43,144 @@ public class ConsoleUI extends ConsoleTools{
             case 9:
                 printProductDeletePage();
                 break;
+            case 2:
+                printOrderManagePage();
+                break;
         }
     }
+    public static void printSingleOrder(Order order) {
+        System.out.println("  订单号: " + order.getOrderId());
+        System.out.println("  [订单明细]");
+        for (OrderItem item : order.getOrderItemList().getItemList()) {
+            System.out.println("  - " + item.toString());
+        }
+        yellow("  实付金额: " + String.format("%.2f元", order.getFinalPrice()) + "\n");
+        printDivider();
+    }
+    private static void printOrderManagePage() {
+        int status = Pages.getCurrentPageStatus();
 
+        if (status == 0) {
+            printFunction("1.创建订单","挑选商品加入购物车并结算");
+            printFunction("2.查询订单","按订单号查询订单");
+            printFunction("3.显示所有订单","查看所有的历史订单");
+            System.out.println();
+            printFunction("0.返回首页","退出当前菜单");
+            printDivider();
+            return;
+        }
+
+        if (status == 5) {
+            Order newOrder = Global.getCurrentGeneratedOrder();
+            if(newOrder != null) {
+                green("  [交易成功]\n");
+                System.out.println("  系统单号: " + newOrder.getOrderId());
+                printDivider();
+                System.out.println("  [订单明细]");
+                for (com.wyr.ecommercesys.order.OrderItem item : newOrder.getOrderItemList().getItemList()) {
+                    System.out.println("  - " + item.toString());
+                }
+                printDivider();
+                yellow("  实付金额: ￥" + String.format("%.2f", newOrder.getFinalPrice()) + "\n");
+                printDivider();
+            }
+            return;
+        }
+
+        // ==========================================
+        // [新增代码] 修复“购物车乱入” Bug
+        // [修改原因]
+        // 之前忘记了 Status 7(查询) 和 Status 8(所有订单) 属于独立的展示页面。
+        // 如果不在这里 return 拦截掉，代码会继续往下走，强行把当前购物车打印出来，
+        // 导致历史订单和购物车出现在同一个屏幕里，逻辑极其混乱。
+        // ==========================================
+        if (status == 7) {
+            com.wyr.ecommercesys.order.Order queriedOrder = Global.getCurrentGeneratedOrder();
+            if (queriedOrder != null) {
+                green("  [订单查询结果]\n");
+                printSingleOrder(queriedOrder);
+            } else {
+                yellow("  [系统提示] 未查找到对应编号的订单记录。\n");
+                printDivider();
+            }
+            return; // 打印完直接结束，绝不往下漏！
+        }
+
+        if (status == 8) {
+            green("  [历史所有订单记录]\n");
+            com.wyr.ecommercesys.order.OrderList orderList = Global.getCurrentOrderList();
+
+            if (orderList == null || orderList.getOrderList().isEmpty()) {
+                yellow("  暂无任何历史交易订单。\n");
+                printDivider();
+            } else {
+                for (com.wyr.ecommercesys.order.Order order : orderList.getOrderList()) {
+                    printSingleOrder(order);
+                }
+            }
+            return; // 打印完直接结束！
+        }
+
+        // 走到这里的，只剩下 Status 1, 2, 3, 4，它们都合法需要打印购物车
+        ShoppingCart cart = Global.getCurrentShoppingCart();
+        if (cart.isEmpty()) {
+            yellow("[提示] 当前购物车为空，快去挑选商品吧！\n");
+        } else {
+            green("[购物车清单]\n");
+            for (com.wyr.ecommercesys.order.OrderItem item : cart.getCartItems()) {
+                System.out.println("  - " + item.toString());
+            }
+            printDivider();
+            yellow(String.format("  当前总计金额: %.2f 元\n", cart.getTotalPrice()));
+        }
+        printDivider();
+
+        if (status == 1) {
+            printFunction("1. 添加商品", "输入商品编号加入购物车");
+            printFunction("2. 修改数量", "调整购物车中已有商品的数量");
+            printFunction("3. 确认下单", "提交订单并结账");
+            System.out.println();
+            printFunction("0. 放弃下单", "清空购物车并返回上一级");
+            printDivider();
+        }
+        else if (status == 3) {
+            Product p = Global.getCurrentOrderOperateProduct();
+            if (p != null) {
+                green("  [待添加商品确认]\n");
+                printEditProductInfo(new EditProduct(p, true));
+
+                int existingQty = 0;
+                for (com.wyr.ecommercesys.order.OrderItem item : cart.getCartItems()) {
+                    if (item.getProductSnapshot().getProductId().equals(p.getProductId())) {
+                        existingQty = item.getBuyQuantity();
+                        break;
+                    }
+                }
+                System.out.println("  物理总库存: " + p.getQuantity() + " 件");
+                System.out.println("  购物车已选: " + existingQty + " 件");
+                yellow("  最大可添加: " + (p.getQuantity() - existingQty) + " 件\n");
+                printDivider();
+            }
+        }
+        else if (status == 4) {
+            Product p = Global.getCurrentOrderOperateProduct();
+            if (p != null) {
+                green("  [待修改商品确认]\n");
+                printEditProductInfo(new EditProduct(p, true));
+
+                int currentCartQty = 0;
+                for (com.wyr.ecommercesys.order.OrderItem item : cart.getCartItems()) {
+                    if (item.getProductSnapshot().getProductId().equals(p.getProductId())) {
+                        currentCartQty = item.getBuyQuantity();
+                        break;
+                    }
+                }
+                System.out.println("  物理总库存: " + p.getQuantity() + " 件");
+                yellow("  购物车已选: " + currentCartQty + " 件\n");
+                printDivider();
+            }
+        }
+    }
     private static void printProductDeletePage() {
         if(Pages.getCurrentPageStatus() == 1){
             red("您即将删除的商品信息如下：\n");
