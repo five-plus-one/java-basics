@@ -57,9 +57,11 @@ public class ConsoleUI extends ConsoleTools{
         yellow("  实付金额: " + String.format("%.2f元", order.getFinalPrice()) + "\n");
         printDivider();
     }
+
     private static void printOrderManagePage() {
         int status = Pages.getCurrentPageStatus();
 
+        // 绝对拦截区：不允许出现购物车
         if (status == 0) {
             printFunction("1.创建订单","挑选商品加入购物车并结算");
             printFunction("2.查询订单","按订单号查询订单");
@@ -87,13 +89,13 @@ public class ConsoleUI extends ConsoleTools{
             return;
         }
 
-        // ==========================================
-        // [新增代码] 修复“购物车乱入” Bug
-        // [修改原因]
-        // 之前忘记了 Status 7(查询) 和 Status 8(所有订单) 属于独立的展示页面。
-        // 如果不在这里 return 拦截掉，代码会继续往下走，强行把当前购物车打印出来，
-        // 导致历史订单和购物车出现在同一个屏幕里，逻辑极其混乱。
-        // ==========================================
+        // [修复] Status 6 为纯净查询页
+        if (status == 6) {
+            green("  [订单查询]\n");
+            printDivider();
+            return;
+        }
+
         if (status == 7) {
             com.wyr.ecommercesys.order.Order queriedOrder = Global.getCurrentGeneratedOrder();
             if (queriedOrder != null) {
@@ -103,7 +105,7 @@ public class ConsoleUI extends ConsoleTools{
                 yellow("  [系统提示] 未查找到对应编号的订单记录。\n");
                 printDivider();
             }
-            return; // 打印完直接结束，绝不往下漏！
+            return;
         }
 
         if (status == 8) {
@@ -118,10 +120,10 @@ public class ConsoleUI extends ConsoleTools{
                     printSingleOrder(order);
                 }
             }
-            return; // 打印完直接结束！
+            return;
         }
 
-        // 走到这里的，只剩下 Status 1, 2, 3, 4，它们都合法需要打印购物车
+        // 允许出现购物车的操作区 (Status 1, 2, 3, 4)
         ShoppingCart cart = Global.getCurrentShoppingCart();
         if (cart.isEmpty()) {
             yellow("[提示] 当前购物车为空，快去挑选商品吧！\n");

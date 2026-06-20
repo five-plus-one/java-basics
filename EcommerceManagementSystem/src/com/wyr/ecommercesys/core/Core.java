@@ -76,7 +76,8 @@ public class Core {
     }
 
     private static void OrderQuery() {
-        Pages.setCurrentPageStatus(2);
+        // [修复] 必须使用 Status 6 彻底隔离购物车界面
+        Pages.setCurrentPageStatus(6);
         Pages.renderCurrentPage();
 
         String queryId = InputTools.getStrWithGuide("需要查询的订单号", true);
@@ -137,37 +138,20 @@ public class Core {
                         continue;
                     }
 
-                    // [旧代码]
-                    // while(true) {
-                    //     Pages.renderCurrentPage();
-                    //     ConsoleUI.printDivider();
-                    //     ConsoleUI.green("  [待添加商品确认]\n");
-                    //     String inputStr = InputTools.getStrWithGuide("输入添加数量...");
-                    //     try { addNum = Integer.parseInt(inputStr); ... } catch (...) { ... }
-                    // }
-                    // [修改原因]
-                    // 自己写死循环捕获异常太笨重了。直接把数据丢进 Global 挂载，
-                    // 切换状态到 3。然后直接复用 InputTools 强大的 getIntWithGuide。
-                    // 出了错 InputTools 底层会去帮我们调用 Pages.renderCurrentPage()，极其优雅！
                     Global.setCurrentOrderOperateProduct(p);
                     Pages.setCurrentPageStatus(3);
-                    Pages.renderCurrentPage(); //之前漏了这一句，导致渲染没有及时更新
+                    Pages.renderCurrentPage();
 
                     int addNum = InputTools.getIntWithGuide("添加数量(件) (输入0取消)", 0, availableStock);
 
                     if (addNum == 0) {
-                        // 用户已经输入完毕（无论取消还是成功），“待确认面板”的历史使命已经结束。
-                        // 必须将状态切回 2（纯净购物车视图），然后再刷新屏幕。
-                        // 否则带着 Status 3 去刷新，确认面板就会一直挂在屏幕上。
                         Pages.setCurrentPageStatus(2);
                         Pages.renderCurrentPage();
                         ConsoleUI.yellow("[系统提示] 已取消添加该商品。\n");
                     } else {
                         cart.addItemOrMerge(p, addNum);
-
-                        Pages.setCurrentPageStatus(2); // 切回纯净模式
+                        Pages.setCurrentPageStatus(2);
                         Pages.renderCurrentPage();
-
                         ConsoleUI.green("[操作成功] 商品已加入购物车。\n");
                     }
 
@@ -207,20 +191,15 @@ public class Core {
 
                     Product p = Global.getCurrentProductList().getProductById(targetId);
 
-                    // [旧代码]
-                    // 同样是长长的一串 try-catch 死循环，和添加商品的逻辑严重重复。
-                    // [修改原因]
-                    // 状态机分发模式。切到 Status 4，把舞台交给 ConsoleUI 去画图，
-                    // 把校验脏活累活交给 InputTools。
                     Global.setCurrentOrderOperateProduct(p);
                     Pages.setCurrentPageStatus(4);
-                    Pages.renderCurrentPage(); //之前漏了这一句，导致渲染没有及时更新
+                    Pages.renderCurrentPage();
+
                     int newNum = InputTools.getIntWithGuide("新的购买数量 (输入0移出购物车)", 0, p.getQuantity());
 
                     cart.updateItemQuantity(targetId, newNum);
 
-                    //  同理，切回 Status 2 隐藏面板
-                    Pages.setCurrentPageStatus(2); // 切回纯净模式
+                    Pages.setCurrentPageStatus(2);
                     Pages.renderCurrentPage();
 
                     ConsoleUI.green("[操作成功] 数量修改完毕。\n");
@@ -249,13 +228,6 @@ public class Core {
                                 immutableList,
                                 Global.getCurrentProductList()
                         );
-
-                        // [旧代码]
-                        // ConsoleUI.clearScreen();
-                        // ConsoleUI.green("  [交易成功]\n"); ...
-                        // [修改原因]
-                        // Core 应当只负责流转数据。生成完订单后，塞给 Global，切到 Status 5。
-                        // 订单小票的具体排版完全由 ConsoleUI 决定。
 
                         Global.setCurrentGeneratedOrder(newOrder);
                         Pages.setCurrentPageStatus(5);
