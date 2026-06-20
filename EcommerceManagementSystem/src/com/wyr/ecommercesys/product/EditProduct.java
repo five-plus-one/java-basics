@@ -30,6 +30,12 @@ public class EditProduct extends Product{
         super(product.getProductId(),product.getProductName(),
                 product.getCategoryList(), product.getPrice(),
                 product.getQuantity(),ignore);
+        //这里原来漏了更新编辑信息，由product直接创建的，所有信息均已更新
+        isSetProductId = true;
+        isSetProductName = true;
+        isSetProductPrice = true;
+        isSetProductQuantity = true;
+        isSetCategoryList = true;
     }
 
     @Override

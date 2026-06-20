@@ -33,6 +33,28 @@ public class ConsoleUI extends ConsoleTools{
                 break;
             case 7:
                 printProductQueryPage();
+                break;
+            case 8:
+                printProductUpdatePage();
+                break;
+        }
+    }
+
+    private static void printProductUpdatePage() {
+        if(Pages.getCurrentPageStatus() == 5){
+            printEditProductInfo();
+        }else if(Pages.getCurrentPageStatus() == 4){
+            printEditProductInfo();
+            ConsoleUI.printFunction("1.","修改商品名称");
+            ConsoleUI.printFunction("2.","修改商品分类");
+            ConsoleUI.printFunction("3.","修改商品单价");
+            ConsoleUI.printFunction("4.","修改商品库存");
+            ConsoleUI.printFunction("0.","退出修改并保存");
+        }else if(Pages.getCurrentPageStatus() == 0){
+            printEditProductInfo();
+        }else if(Pages.getCurrentPageStatus() >0 && Pages.getCurrentPageStatus() <= 3){
+            printEditProductInfo(); //原来漏了这个，导致编辑标签的时候无法显示对应的信息
+            printCategoryEditUI(Pages.getCurrentPageStatus());
         }
     }
 
@@ -69,14 +91,18 @@ public class ConsoleUI extends ConsoleTools{
         System.out.println("请按照提示输入需要添加的商品信息");
         printDivider();
         printEditProductInfo();
-        if(Pages.getCurrentPageStatus() == 1){
+        printCategoryEditUI(Pages.getCurrentPageStatus());
+    }
+
+    private static void printCategoryEditUI(int status) {
+        if(status == 1){
             ConsoleUI.yellow("分类管理\n");
             ConsoleUI.printFunction("1.添加分类","为添加的商品添加一个分类");
             ConsoleUI.printFunction("2.删除分类","删除已添加的分类");
             ConsoleUI.printFunction("0.继续","继续完成下一步操作");
-        }else if(Pages.getCurrentPageStatus() == 2){
+        }else if(status == 2){
             ConsoleUI.yellow("分类管理 - 添加分类\n");
-        }else if(Pages.getCurrentPageStatus() == 3){
+        }else if(status == 3){
             ConsoleUI.yellow("分类管理 - 删除分类\n");
             printDivider();
             if(Global.getCurrentEditProduct()

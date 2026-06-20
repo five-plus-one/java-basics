@@ -81,4 +81,17 @@ public class ProductList {
         }
         return queryResult;
     }
+
+    public void updateProduct(String targetId, Product updatedProduct) throws ProductNotFoundException {
+        int index = getProductSerialNumberById(targetId);
+        if (index == -1) {
+            throw new ProductNotFoundException("wyr-更新失败：无法找到编号为" + targetId + "的商品");
+        }
+        // 使用 List 的 set 方法，将指定索引位置的对象替换为新对象
+        productList.set(index, updatedProduct);
+    }
+
+    public void updateProduct(Product updatedProduct) throws ProductNotFoundException {
+        updateProduct(updatedProduct.getProductId(), updatedProduct);
+    }
 }

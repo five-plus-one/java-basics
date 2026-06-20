@@ -11,6 +11,7 @@ import com.wyr.ecommercesys.product.exception.ProductQuantityIllegalException;
 import com.wyr.ecommercesys.product.exception.ProductNotFoundException;
 import com.wyr.ecommercesys.product.exception.ProductPriceIllegalException;
 
+import java.io.Console;
 
 
 public class Core {
@@ -51,11 +52,84 @@ public class Core {
                 case 2:
                     ProductQuery();
                     break;
+                case 3:
+                    ProductUpdate();
+                    break;
                 case 5:
                     ProductShowAll();
+                    break;
             }
         }
 
+    }
+
+    private static void ProductUpdate() {
+        Pages.switchPage(8);
+        Pages.setCurrentPageStatus(6);
+        Pages.renderCurrentPage();
+        String updateProductId = InputTools.getStrWithGuide("需要修改的商品编号");
+        try{
+            Product product = Global.getCurrentProductList().getProductById(updateProductId);
+            Global.setCurrentEditProduct(new EditProduct(product,true));
+            int showSaveMenu = 0;
+//            Pages.setCurrentPageStatus(4);
+//            Pages.renderCurrentPage();
+            //上面这两行，原来写在循环外面，测试的时候会发现页面无法正常刷新，应该写到循环里面
+            while(true){
+                Pages.setCurrentPageStatus(4);
+                Pages.renderCurrentPage();
+                int choice = InputTools.getIntWithGuide("功能编号",0,4);
+                if(choice == 0){
+                    break;
+                }else{
+                    showSaveMenu = 1;
+                }
+                switch (choice){
+                    case 1:
+                        EditProductInput.inputProductName();
+                        break;
+                    case 2:
+                        EditProductInput.inputProductCategory();
+                        break;
+                    case 3:
+                        EditProductInput.inputProductPrice();
+                        break;
+                    case 4:
+                        EditProductInput.inputProductQuantity();
+                        break;
+                }
+            }
+            if(showSaveMenu > 0){
+                Pages.setCurrentPageStatus(5);
+                Pages.renderCurrentPage();
+                if(Pages.showConfirm("更新商品信息","取消更新")){
+                    product = Global.getCurrentEditProduct().convertToProduct();
+                    // 这样无法完成更新，为什么？
+                    // 仅仅改变了 Core 类里 product 这个局部变量的指向，
+                    // 而 ProductList 内部那个真正的 List<Product> 集合里，依然存放着原来那个旧对象的引用，
+                    // 集合本身并没有被修改。
+                    // 所以需要单独增加一个更新的方法
+                    Global.getCurrentProductList().updateProduct(product);
+                    ConsoleUI.green("商品信息更新成功！\n");
+                }else{
+                    ConsoleUI.green("已取消更新商品信息。\n");
+                }
+                ConsoleUI.green("按下回车键以继续");
+                InputTools.waitForEnter();
+            }
+        } catch (ProductNotFoundException e) {
+            ConsoleUI.yellow("未找到该编号的商品：" + e.getMessage() + "。\n");
+            ConsoleUI.green("按下回车键以继续。");
+            InputTools.waitForEnter();
+        } catch (ProductPriceIllegalException e) {
+            ConsoleUI.yellow("商品价格不合法：" + e.getMessage() + "。\n");
+            ConsoleUI.green("按下回车键以继续。");
+            InputTools.waitForEnter();
+        } catch (ProductQuantityIllegalException e) {
+            ConsoleUI.yellow("商品库存不合法：" + e.getMessage() + "。\n");
+            ConsoleUI.green("按下回车键以继续。");
+            InputTools.waitForEnter();
+        }
     }
 
     private static void ProductShowAll() {
