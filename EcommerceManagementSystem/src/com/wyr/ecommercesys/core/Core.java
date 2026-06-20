@@ -1,6 +1,5 @@
 package com.wyr.ecommercesys.core;
 
-import com.wyr.ecommercesys.console.ConsoleTools;
 import com.wyr.ecommercesys.console.ConsoleUI;
 import com.wyr.ecommercesys.input.EditProductInput;
 import com.wyr.ecommercesys.input.InputTools;
@@ -9,7 +8,6 @@ import com.wyr.ecommercesys.product.EditProduct;
 import com.wyr.ecommercesys.product.exception.ProducetQuantityIllegalException;
 import com.wyr.ecommercesys.product.exception.ProductPriceIllegalException;
 
-import java.util.Random;
 
 public class Core {
     private Core(){}

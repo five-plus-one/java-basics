@@ -56,6 +56,11 @@ public class CategoryList {
         return sb.toString();
     }
 
+    @Override
+    public String toString(){
+        return getSimpleDescription();
+    }
+
     public void removeCategory(int index){
         categoryList.remove(index);
     }

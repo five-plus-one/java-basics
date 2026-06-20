@@ -1,6 +1,8 @@
 package com.wyr.ecommercesys.product;
 
+import com.wyr.ecommercesys.category.Category;
 import com.wyr.ecommercesys.product.exception.ProductIdExisedException;
+import com.wyr.ecommercesys.product.exception.ProductNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +14,10 @@ public class ProductList {
     }
     public ProductList() {
         this.productList = new ArrayList<>();
+    }
+    public ProductList(Product product) {
+        this();
+        this.productList.add(product);
     }
     public List<Product> getProductList() {
         return productList;
@@ -43,4 +49,34 @@ public class ProductList {
         productList.add(product);
     }
 
+    public Product getProductById(String productId) throws ProductNotFoundException {
+        int serialNum = getProductSerialNumberById(productId);
+        if(serialNum==-1){
+            throw new ProductNotFoundException("无法找到编号为" + productId + "的商品");
+        }
+        return productList.get(serialNum);
+    }
+
+    public ProductList query(String fuzzyWord){
+        ProductList queryResult = new ProductList();
+        for(Product product:productList){
+            if((product.getProductName() + " "
+                    + product.getCategoryList().getSimpleDescription())
+                    .toLowerCase().contains(fuzzyWord.toLowerCase())){ //模糊匹配,规则是商品名、标签名中只要包含了目标词汇就加入
+                queryResult.addProduct(product);
+            }
+        }
+        return queryResult;
+    }
+
+    public ProductList query(Category category){
+        //检索包含特定标签的
+        ProductList queryResult = new ProductList();
+        for(Product product:productList){
+            if(product.getCategoryList().contains(category)){
+                queryResult.addProduct(product);
+            }
+        }
+        return queryResult;
+    }
 }

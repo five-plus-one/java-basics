@@ -1,6 +1,5 @@
 package com.wyr.ecommercesys.core;
 
-import com.wyr.ecommercesys.category.CategoryList;
 import com.wyr.ecommercesys.category.CategoryPool;
 import com.wyr.ecommercesys.product.EditProduct;
 import com.wyr.ecommercesys.product.ProductList;

@@ -74,6 +74,10 @@ public class ConsoleTools {
         System.out.print(sb.toString());
     }
 
+    public static String padToTarget(String str,int targetWidth){
+        return padToTarget(str,targetWidth,3);
+    }
+
     public static String padToTarget(String str, int targetWidth,int type) {
         int currentWidth = getDisplayWidth(str);
         int spacesNeeded = targetWidth - currentWidth;

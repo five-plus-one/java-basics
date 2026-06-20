@@ -3,6 +3,7 @@ package com.wyr.ecommercesys.console;
 import com.wyr.ecommercesys.core.Global;
 import com.wyr.ecommercesys.pages.Pages;
 import com.wyr.ecommercesys.product.EditProduct;
+import com.wyr.ecommercesys.product.ProductList;
 
 public class ConsoleUI extends ConsoleTools{
     private  ConsoleUI() {} //私有化构造方法，防止被创建
@@ -115,4 +116,15 @@ public class ConsoleUI extends ConsoleTools{
     public static void printEditProductInfo(){
         printEditProductInfo(Global.getCurrentEditProduct());
     }
+//
+//    public static void showProductList(ProductList productList){
+//        ConsoleUI.yellow(padToTarget("商品编号",20)+
+//                         padToTarget("商品名称",20)+
+//                         padToTarget("所属类别",20)+
+//                         padToTarget("单价",15)+
+//                         padToTarget("库存",15)
+//                );
+//        printDivider();
+//        for()
+//    }
 }
