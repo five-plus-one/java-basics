@@ -94,4 +94,18 @@ public class ProductList {
     public void updateProduct(Product updatedProduct) throws ProductNotFoundException {
         updateProduct(updatedProduct.getProductId(), updatedProduct);
     }
+
+
+    public void deleteProduct(String productId) throws ProductNotFoundException {
+        // 复用底层封装好的查找逻辑获取索引
+        int index = getProductSerialNumberById(productId);
+        if (index == -1) {
+            throw new ProductNotFoundException("wyr-删除失败：无法找到编号为" + productId + "的商品");
+        }
+        productList.remove(index);
+    }
+
+    public void deleteProduct(Product product) throws ProductNotFoundException {
+        deleteProduct(product.getProductId());
+    }
 }

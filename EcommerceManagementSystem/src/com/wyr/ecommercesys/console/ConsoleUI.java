@@ -37,6 +37,16 @@ public class ConsoleUI extends ConsoleTools{
             case 8:
                 printProductUpdatePage();
                 break;
+            case 9:
+                printProductDeletePage();
+                break;
+        }
+    }
+
+    private static void printProductDeletePage() {
+        if(Pages.getCurrentPageStatus() == 1){
+            red("您即将删除的商品信息如下：\n");
+            printEditProductInfo();
         }
     }
 
