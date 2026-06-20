@@ -55,12 +55,39 @@ public class Core {
                 case 3:
                     ProductUpdate();
                     break;
+                case 4:
+                    ProductDelete();
+                    break; //这里原来漏了个break，导致了穿透
                 case 5:
                     ProductShowAll();
                     break;
             }
         }
 
+    }
+
+    private static void ProductDelete() {
+        Pages.switchPage(9);
+        Pages.setCurrentPageStatus(0);
+        Pages.renderCurrentPage();
+        String deleteProductId = InputTools.getStrWithGuide("需要删除的商品编号");
+        try{
+            Product product = Global.getCurrentProductList().getProductById(deleteProductId);
+            Pages.setCurrentPageStatus(1);
+            Pages.renderCurrentPage();
+            if(Pages.showConfirm("删除","取消删除")){
+                Global.getCurrentProductList().deleteProduct(product);
+                ConsoleUI.green("删除成功，按下回车键以继续。");
+                InputTools.waitForEnter();
+            }else{
+                ConsoleUI.green("已取消删除，按下回车键以继续。");
+                InputTools.waitForEnter();
+            }
+        } catch (ProductNotFoundException e) {
+            ConsoleUI.yellow("未找到该编号的商品：" + e.getMessage() + "。\n");
+            ConsoleUI.green("按下回车键以继续。");
+            InputTools.waitForEnter();
+        }
     }
 
     private static void ProductUpdate() {
