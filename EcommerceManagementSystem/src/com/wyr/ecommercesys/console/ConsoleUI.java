@@ -3,6 +3,7 @@ package com.wyr.ecommercesys.console;
 import com.wyr.ecommercesys.core.Global;
 import com.wyr.ecommercesys.pages.Pages;
 import com.wyr.ecommercesys.product.EditProduct;
+import com.wyr.ecommercesys.product.Product;
 import com.wyr.ecommercesys.product.ProductList;
 
 public class ConsoleUI extends ConsoleTools{
@@ -30,7 +31,38 @@ public class ConsoleUI extends ConsoleTools{
             case 5:
                 printProductAddPage();
                 break;
+            case 7:
+                printProductQueryPage();
         }
+    }
+
+    private static void printProductQueryPage() {
+        System.out.println("请根据提示选择查询方式");
+        printDivider();
+        if(Pages.getCurrentPageStatus() == 1){
+            ConsoleUI.printFunction("1.按商品编号查询","按照商品编号精确查询");
+            ConsoleUI.printFunction("2.按商品模糊查询","按照商品名称或分类模糊查询匹配");
+            ConsoleUI.printFunction("3.按商品分类查询","根据分类进行查询");
+            System.out.println();
+            ConsoleUI.printFunction("0.退出查询","退出查询，返回到商品管理");
+            printDivider();
+        }else{
+            switch (Pages.getCurrentPageStatus()){
+                case 2:
+                    yellow("按编号查询\n");
+                    printDivider();
+                    break;
+                case 3:
+                    yellow("按名称查询\n");
+                    printDivider();
+                    break;
+                case 4:
+                    yellow("按分类查询\n");
+                    printDivider();
+                    break;
+            }
+        }
+
     }
 
     private static void printProductAddPage() {
@@ -127,4 +159,28 @@ public class ConsoleUI extends ConsoleTools{
 //        printDivider();
 //        for()
 //    }
+
+    public static void printProductList(ProductList productList){
+        if(productList!=null && !productList.isEmpty()){
+            yellow(
+                    padToTarget("商品编号",20)+
+                            padToTarget("商品名称",20)+
+                            padToTarget("分类",20)+
+                            padToTarget("单价",20)+
+                            padToTarget("库存数量",20)+
+                            "\n");
+            for(Product product:productList.getProductList()){
+                System.out.println(
+                        padToTarget(product.getProductId(),20)+
+                                padToTarget(product.getProductName(),20)+
+                                padToTarget(product.getCategoryList().getSimpleDescription(),20)+
+                                padToTarget(String.format("%.2f",product.getPrice()),20)+
+                                padToTarget(product.getQuantity()+"",20)
+                );
+            }
+        }else{
+            yellow("未查询到商品信息！\n");
+        }
+
+    }
 }

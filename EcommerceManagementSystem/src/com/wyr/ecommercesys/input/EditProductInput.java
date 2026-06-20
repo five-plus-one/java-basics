@@ -6,7 +6,7 @@ import com.wyr.ecommercesys.console.ConsoleUI;
 import com.wyr.ecommercesys.core.Global;
 import com.wyr.ecommercesys.pages.Pages;
 import com.wyr.ecommercesys.product.EditProduct;
-import com.wyr.ecommercesys.product.exception.ProducetQuantityIllegalException;
+import com.wyr.ecommercesys.product.exception.ProductQuantityIllegalException;
 import com.wyr.ecommercesys.product.exception.ProductPriceIllegalException;
 
 import java.util.Random;
@@ -78,7 +78,7 @@ public class EditProductInput {
                         InputTools.getIntWithGuide("商品库存")
                 );
                 break;
-            } catch (ProducetQuantityIllegalException e) {
+            } catch (ProductQuantityIllegalException e) {
                 Pages.renderCurrentPage();
 
                 System.out.print("发生错误：");
@@ -105,6 +105,11 @@ public class EditProductInput {
                 Pages.renderCurrentPage();
                 String addCategory = InputTools.getStrWithGuide("添加的分类");
                 Category category = Global.getCategoryPool().getCategoryByName(addCategory);
+                //调试代码
+//                System.out.println("---");
+//                Global.getCategoryPool().test_printCategoryList();
+//                System.out.println("---");
+
                 if(categoryList.contains(category)){
                     ConsoleUI.red("该分类已存在。按下回车以继续\n");
                     InputTools.waitForEnter();

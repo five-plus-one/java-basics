@@ -40,7 +40,9 @@ public class ProductList {
     public boolean isProductExist(String productId){
         return getProductSerialNumberById(productId)!=-1;
     }
-
+    public boolean isEmpty(){
+        return productList.isEmpty();
+    }
     public void addProduct(Product product){
         if(isProductExist(product.getProductId())){
             throw new ProductIdExisedException("wyr-添加商品错误：商品ID"+product.getProductId()+ "已存在！");
@@ -52,7 +54,7 @@ public class ProductList {
     public Product getProductById(String productId) throws ProductNotFoundException {
         int serialNum = getProductSerialNumberById(productId);
         if(serialNum==-1){
-            throw new ProductNotFoundException("无法找到编号为" + productId + "的商品");
+            throw new ProductNotFoundException("wyr-无法找到编号为" + productId + "的商品");
         }
         return productList.get(serialNum);
     }

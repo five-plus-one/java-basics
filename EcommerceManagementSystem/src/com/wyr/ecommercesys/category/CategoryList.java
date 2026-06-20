@@ -34,6 +34,8 @@ public class CategoryList {
 
     public boolean contains(String name){
         for(Category category : categoryList){
+//            System.out.println(category.getCategoryName() + name);
+            //调试代码
             if(category.getCategoryName().equals(name)){
                 return true;
             }

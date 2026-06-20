@@ -5,8 +5,12 @@ import com.wyr.ecommercesys.input.EditProductInput;
 import com.wyr.ecommercesys.input.InputTools;
 import com.wyr.ecommercesys.pages.Pages;
 import com.wyr.ecommercesys.product.EditProduct;
-import com.wyr.ecommercesys.product.exception.ProducetQuantityIllegalException;
+import com.wyr.ecommercesys.product.Product;
+import com.wyr.ecommercesys.product.ProductList;
+import com.wyr.ecommercesys.product.exception.ProductQuantityIllegalException;
+import com.wyr.ecommercesys.product.exception.ProductNotFoundException;
 import com.wyr.ecommercesys.product.exception.ProductPriceIllegalException;
+
 
 
 public class Core {
@@ -45,9 +49,76 @@ public class Core {
                     ProductAdd();
                     break;
                 case 2:
+                    ProductQuery();
+                    break;
+                case 5:
+                    ProductShowAll();
             }
         }
 
+    }
+
+    private static void ProductShowAll() {
+        Pages.switchPage(6);
+        ConsoleUI.printProductList(Global.getCurrentProductList());
+        ConsoleUI.printDivider();
+        ConsoleUI.green("按下回车键以退出");
+        InputTools.waitForEnter();
+    }
+
+    private static void ProductQuery() {
+        Pages.switchPage(7);
+        while(true){
+            Pages.setCurrentPageStatus(1);
+            Pages.renderCurrentPage();
+            int choice = InputTools.getIntWithGuide("功能编号",0,3);
+            if(choice == 0){
+                break;
+            }else if(choice == 1){
+                Pages.setCurrentPageStatus(2);
+                Pages.renderCurrentPage();
+                String queryId = InputTools.getStrWithGuide("需要查询的商品编号",true);
+                Pages.renderCurrentPage();
+                try{
+                    Product product = Global.getCurrentProductList().getProductById(queryId);
+                    System.out.println("查询结果如下：");
+                    ConsoleUI.printProductList(new ProductList(product));
+                } catch (ProductNotFoundException e) {
+                    ConsoleUI.yellow("未找到商品：" + e.getMessage() + "\n");
+                }
+                ConsoleUI.green("按下回车键以继续");
+                InputTools.waitForEnter();
+            }else if(choice == 2){
+                Pages.setCurrentPageStatus(3);
+                Pages.renderCurrentPage();
+                String fuzzyQueryName = InputTools.getStrWithGuide("模糊查询的名称",true);
+                ProductList FuzzyQueryResult = Global.getCurrentProductList().query(fuzzyQueryName);
+                ConsoleUI.printProductList(FuzzyQueryResult);
+                ConsoleUI.green("按下回车键以继续");
+                InputTools.waitForEnter();
+            }else if(choice == 3){
+                Pages.setCurrentPageStatus(4);
+                Pages.renderCurrentPage();
+                String queryCategoryName = InputTools.getStrWithGuide("分类",true);
+
+                //调试代码
+//                System.out.println("---");
+//                Global.getCategoryPool().test_printCategoryList();
+//                System.out.println("---");
+
+                // 这里一开始写的时候出了问题，if,else里面的内容我写错了，后来通过添加调试代码，找出了问题
+                if(Global.getCategoryPool().hasCategory(queryCategoryName)){
+                    ProductList queryResult = Global.getCurrentProductList().query(
+                            Global.getCategoryPool().getCategoryByName(queryCategoryName)
+                    );
+                    ConsoleUI.printProductList(queryResult);
+                }else{
+                    ConsoleUI.yellow("不存在分类名为" + queryCategoryName + "的分类!\n\n");
+                }
+                ConsoleUI.green("按下回车键以继续");
+                InputTools.waitForEnter();
+            }
+        }
     }
 
     private static void ProductAdd() {
@@ -63,7 +134,7 @@ public class Core {
                 Global.getCurrentProductList().addProduct(Global.getCurrentEditProduct().convertToProduct());
                 ConsoleUI.green("添加成功。按下回车以继续");
                 InputTools.waitForEnter();
-            } catch (ProductPriceIllegalException |ProducetQuantityIllegalException e) {
+            } catch (ProductPriceIllegalException | ProductQuantityIllegalException e) {
                 ConsoleUI.red("添加失败：" + e.getMessage() + " \n按下回车以继续");
                 InputTools.waitForEnter();
             }

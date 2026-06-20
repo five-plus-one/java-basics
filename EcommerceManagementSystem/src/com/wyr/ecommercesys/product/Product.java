@@ -1,7 +1,7 @@
 package com.wyr.ecommercesys.product;
 
 import com.wyr.ecommercesys.category.CategoryList;
-import com.wyr.ecommercesys.product.exception.ProducetQuantityIllegalException;
+import com.wyr.ecommercesys.product.exception.ProductQuantityIllegalException;
 import com.wyr.ecommercesys.product.exception.ProductPriceIllegalException;
 
 // 商品的核心类
@@ -13,7 +13,7 @@ public class Product {
     private CategoryList categoryList;
     private double price;
     private int quantity;
-    public Product(String productId, String productName, CategoryList categoryList, double price, int quantity) throws ProducetQuantityIllegalException, ProductPriceIllegalException {
+    public Product(String productId, String productName, CategoryList categoryList, double price, int quantity) throws ProductQuantityIllegalException, ProductPriceIllegalException {
 //        this.productId = productId;
 //        this.productName = productName;
 //        this.categoryList = categoryList;
@@ -35,7 +35,7 @@ public class Product {
             this.categoryList = categoryList;
             this.setPrice(price);
             this.setQuantity(quantity);
-        } catch (ProductPriceIllegalException | ProducetQuantityIllegalException e) {
+        } catch (ProductPriceIllegalException | ProductQuantityIllegalException e) {
             if(!ignore){
                 throw new RuntimeException(e);
             }
@@ -83,9 +83,9 @@ public class Product {
         return quantity;
     }
 
-    public void setQuantity(int quantity) throws ProducetQuantityIllegalException {
+    public void setQuantity(int quantity) throws ProductQuantityIllegalException {
         if(quantity<0){
-            throw new ProducetQuantityIllegalException("wyr-商品错误：商品数量" + quantity + "不能为负数");
+            throw new ProductQuantityIllegalException("wyr-商品错误：商品数量" + quantity + "不能为负数");
         }
         this.quantity = quantity;
     }

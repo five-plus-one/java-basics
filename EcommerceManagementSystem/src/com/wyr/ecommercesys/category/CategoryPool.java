@@ -12,4 +12,15 @@ public class CategoryPool extends CategoryList{
         }
         return addCategory(new Category(categoryName));
     }
+
+    public boolean hasCategory(String categoryName){
+       return contains(categoryName);
+    }
+
+    //测试代码，帮助排查现在标签池中有什么
+//    public void test_printCategoryList(){
+//        for (Category category : categoryList){
+//            System.out.println(category.getCategoryName());
+//        }
+//    }
 }

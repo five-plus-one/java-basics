@@ -2,10 +2,9 @@ package com.wyr.ecommercesys.product;
 
 import com.wyr.ecommercesys.category.CategoryList;
 import com.wyr.ecommercesys.product.exception.EditProductNotCompletedException;
-import com.wyr.ecommercesys.product.exception.ProducetQuantityIllegalException;
+import com.wyr.ecommercesys.product.exception.ProductQuantityIllegalException;
 import com.wyr.ecommercesys.product.exception.ProductPriceIllegalException;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -19,13 +18,18 @@ public class EditProduct extends Product{
     public EditProduct() {
         super("","",new CategoryList(),10,10,true); //临时数据
     }
-    public EditProduct(Product product) throws ProductPriceIllegalException, ProducetQuantityIllegalException {
+    public EditProduct(Product product) throws ProductPriceIllegalException, ProductQuantityIllegalException {
         this();
         setProductId(product.getProductId());
         setProductName(product.getProductName());
         setCategoryList(product.getCategoryList());
         setPrice(product.getPrice());
         setQuantity(product.getQuantity());
+    }
+    public EditProduct(Product product,Boolean ignore){
+        super(product.getProductId(),product.getProductName(),
+                product.getCategoryList(), product.getPrice(),
+                product.getQuantity(),ignore);
     }
 
     @Override
@@ -53,7 +57,7 @@ public class EditProduct extends Product{
     }
 
     @Override
-    public void setQuantity(int quantity) throws ProducetQuantityIllegalException {
+    public void setQuantity(int quantity) throws ProductQuantityIllegalException {
         super.setQuantity(quantity);
         isSetProductQuantity = true;
     }
@@ -86,7 +90,7 @@ public class EditProduct extends Product{
         return isSetProductId && isSetProductName && isSetProductPrice && isSetProductQuantity && isSetCategoryList;
     }
 
-    public Product convertToProduct() throws ProductPriceIllegalException, ProducetQuantityIllegalException {
+    public Product convertToProduct() throws ProductPriceIllegalException, ProductQuantityIllegalException {
         if(isComplete()){
             return new Product(getProductId(),getProductName(),getCategoryList(),getPrice(),getQuantity());
         }else{

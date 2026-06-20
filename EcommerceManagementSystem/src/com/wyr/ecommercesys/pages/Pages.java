@@ -8,8 +8,8 @@ public class Pages {
     private static int currentPageId;
     private static int currentPageStatus;
     private static final String[] pageName = new String[]{
-            "首页","商品管理","订单管理","保存与读取","退出系统","添加商品"
-            // o     1          2          3         4       5
+            "首页","商品管理","订单管理","保存与读取","退出系统","添加商品","显示全部商品","商品查询"
+            // 0     1          2          3         4       5            6         7
     };
 
     private Pages(){}
