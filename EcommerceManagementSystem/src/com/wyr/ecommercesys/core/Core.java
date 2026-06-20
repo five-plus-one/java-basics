@@ -23,17 +23,26 @@ import java.io.IOException;
 public class Core {
     private Core(){}
     public static void main(String[] args) {
-        // 系统启动：捕获底层抛出的全部解析和 I/O 异常
-        // 如果文件损坏，优雅中断加载，保证系统依然可以空盘启动
+        ConsoleUI.clearScreen();
+
         try {
-            FileTools.loadProducts();
-            FileTools.loadOrders();
+            boolean pLoaded = FileTools.loadProducts();
+            boolean oLoaded = FileTools.loadOrders();
+
+            if (pLoaded || oLoaded) {
+                ConsoleUI.green("\n[系统初始化] 成功读取本地历史数据！欢迎回来。\n");
+            } else {
+                ConsoleUI.yellow("\n[系统初始化] 未检测到本地历史数据文件，系统将从空白状态全新启动。\n");
+            }
+            ConsoleUI.green("按下回车键进入主系统...\n");
+            InputTools.waitForEnter();
+
         } catch (DataCorruptedException e) {
             ConsoleUI.red("\n[严重错误] 本地数据文件已损坏，解析中断：" + e.getMessage() + "\n");
             ConsoleUI.yellow("系统将以空盘模式启动。按下回车键继续...\n");
             InputTools.waitForEnter();
         } catch (IOException e) {
-            ConsoleUI.yellow("\n[系统提示] 读取本地文件失败或文件不存在（首次运行）：" + e.getMessage() + "\n");
+            ConsoleUI.yellow("\n[系统提示] 读取本地文件发生系统异常：" + e.getMessage() + "\n");
             ConsoleUI.yellow("按下回车键继续...\n");
             InputTools.waitForEnter();
         }
@@ -60,16 +69,18 @@ public class Core {
         while (true) {
             ConsoleUI.clearScreen();
             ConsoleUI.printTitle("保存与读取");
-            ConsoleUI.printFunction("1. 立即保存数据", "将当前内存中的商品和订单保存到本地 txt 文件");
+            ConsoleUI.printFunction("1. 立即保存数据", "将当前内存中的商品和订单绝对保存到本地");
+            // [新增] 选项 2，用于读取本地数据
+
+            ConsoleUI.printFunction("2. 重新读取数据", "放弃当前未保存的修改，强制从本地硬盘重新加载");
             System.out.println();
             ConsoleUI.printFunction("0. 返回首页", "退出当前菜单");
             ConsoleUI.printDivider();
 
-            int choice = InputTools.getIntWithGuide("操作编号", 0, 1);
+            int choice = InputTools.getIntWithGuide("操作编号", 0, 2);
             if (choice == 0) {
                 break;
             } else if (choice == 1) {
-                // Controller 拦截所有的底层写入异常，统一交由 View 层打印！
                 try {
                     FileTools.saveProducts();
                     FileTools.saveOrders();
@@ -81,16 +92,61 @@ public class Core {
                 ConsoleUI.green("按下回车返回上一级\n");
                 InputTools.waitForEnter();
             }
+
+            else if (choice == 2) {
+                ConsoleUI.yellow("\n[警告] 重新读取将覆盖当前系统中的所有数据！\n");
+                if (Pages.showConfirm("放弃当前内存所有修改并重新加载本地文件", "取消读取操作")) {
+
+                    // 【极其关键的一步】：重新读取前，必须把内存里现有的数据全部清空（重置大盘），
+                    // 否则读取的方法会在现有的商品和订单后面继续“追加”，导致所有数据疯狂翻倍！
+                    Global.setCurrentProductList(new ProductList());
+                    Global.setCurrentOrderList(new com.wyr.ecommercesys.order.OrderList());
+                    Global.setCurrentShoppingCart(new ShoppingCart());
+
+                    try {
+                        boolean pLoaded = FileTools.loadProducts();
+                        boolean oLoaded = FileTools.loadOrders();
+                        if (pLoaded || oLoaded) {
+                            ConsoleUI.green("\n  [操作成功] 本地数据已重新加载至内存！\n");
+                        } else {
+                            ConsoleUI.yellow("\n  [系统提示] 本地无历史数据文件，当前已重置为空白状态。\n");
+                        }
+                    } catch (DataCorruptedException e) {
+                        ConsoleUI.red("\n  [严重错误] 数据文件损坏：" + e.getMessage() + "\n");
+                    } catch (IOException e) {
+                        ConsoleUI.red("\n  [操作失败] 读取异常：" + e.getMessage() + "\n");
+                    }
+                } else {
+                    ConsoleUI.yellow("\n  [系统提示] 已取消读取操作。\n");
+                }
+                ConsoleUI.green("按下回车返回上一级\n");
+                InputTools.waitForEnter();
+            }
         }
     }
 
 
     private static boolean ExitPage() {
         Pages.switchPage(4);
-        if(Pages.showConfirm("退出","返回")){
-            Pages.switchPage(4);
+        //在确认退出系统时，二次拦截，询问是否需要将内存数据保存至硬盘。
+        if(Pages.showConfirm("退出系统","取消操作")){
+
+            ConsoleUI.yellow("\n[重要提示] 您可能有未保存的修改。\n");
+            if(Pages.showConfirm("保存所有数据到本地文件再退出", "直接退出 (放弃所有未保存数据)")){
+                try {
+                    FileTools.saveProducts();
+                    FileTools.saveOrders();
+                    ConsoleUI.green("\n  [操作成功] 数据已安全保存，放心退出！再见。\n");
+                } catch (IOException e) {
+                    ConsoleUI.red("\n  [操作失败] 写入异常：" + e.getMessage() + "。系统仍将强制退出。\n");
+                }
+                InputTools.waitForEnter();
+            } else {
+                ConsoleUI.yellow("\n  已选择放弃保存，正在退出系统...\n");
+            }
             return true;
-        }else{
+
+        } else {
             return false;
         }
     }

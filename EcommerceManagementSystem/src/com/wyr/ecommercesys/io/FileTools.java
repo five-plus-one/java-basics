@@ -66,9 +66,9 @@ public class FileTools {
     }
 
     // 读取所有商品：将异常抛给 Core
-    public static void loadProducts() throws IOException, DataCorruptedException {
+    public static boolean loadProducts() throws IOException, DataCorruptedException {
         File file = new File(GOODS_FILE);
-        if (!file.exists()) return;
+        if (!file.exists()) return false; // 文件不存在，返回 false
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
@@ -82,7 +82,7 @@ public class FileTools {
                 double price = Double.parseDouble(fields.get(3));
                 int quantity = Integer.parseInt(fields.get(4));
 
-                CategoryList cl = new CategoryList();
+                com.wyr.ecommercesys.category.CategoryList cl = new com.wyr.ecommercesys.category.CategoryList();
                 if (!categoryStr.equals("暂无类别") && !categoryStr.isEmpty()) {
                     String[] catNames = categoryStr.split(",");
                     for (String cName : catNames) {
@@ -94,6 +94,7 @@ public class FileTools {
                 Global.getCurrentProductList().addProduct(p);
             }
         }
+        return true; // 成功读取完毕，返回 true
     }
 
     // 保存所有订单：将异常抛给 Core
@@ -121,9 +122,9 @@ public class FileTools {
     }
 
     // 读取所有订单：将异常抛给 Core
-    public static void loadOrders() throws IOException, DataCorruptedException {
+    public static boolean loadOrders() throws IOException, DataCorruptedException {
         File file = new File(ORDER_FILE);
-        if (!file.exists()) return;
+        if (!file.exists()) return false; // 文件不存在，返回 false
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
@@ -147,7 +148,7 @@ public class FileTools {
                     double pPrice = Double.parseDouble(fields.get(pointer++));
                     int buyQty = Integer.parseInt(fields.get(pointer++));
 
-                    Product tmpProduct = new Product(pId, pName, new CategoryList(), pPrice, 999, true);
+                    Product tmpProduct = new Product(pId, pName, new com.wyr.ecommercesys.category.CategoryList(), pPrice, 999, true);
                     try {
                         OrderItem item = new OrderItem(tmpProduct, buyQty);
                         loadedItems.add(item);
@@ -161,5 +162,6 @@ public class FileTools {
                 Global.getCurrentOrderList().addOrder(restoredOrder);
             }
         }
+        return true; // 成功读取完毕，返回 true
     }
 }
